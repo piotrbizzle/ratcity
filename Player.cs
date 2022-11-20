@@ -8,23 +8,36 @@ public class Player : MonoBehaviour
     private float SCURRYHEIGHTDELTA = 0.38f;
     
     // configurables
-    private float WalkDrag = 15;
+    private float WalkDrag = 30;
     private float WalkAcceleration = 20;
     private float WalkMaxSpeed = 6;    
 
-    private float ScurryDrag = 8;
+    private float ScurryDrag = 15;
     private float ScurryAcceleration = 12;
     private float ScurryMaxSpeed = 12;    
+
+    private float GravityAcceleration = 4;
+    private float GravityMaxSpeed = 8;
+
+    private float CoyoteTimeSeconds = 0.1f;
     
     // movement
-    private float yMomentum;
     private float xMomentum;
+    private float yMomentum;
     private bool isScurrying;
+    private float onGroundSeconds;
     
     // Start is called before the first frame update
     void Start()
     {
-        
+	// collision
+        this.gameObject.AddComponent<BoxCollider2D>();
+
+	Rigidbody2D rb = this.gameObject.AddComponent<Rigidbody2D>();
+	rb.gravityScale = 0.0f;
+	rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+	rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+	rb.sleepMode = RigidbodySleepMode2D.NeverSleep;	
     }
 
     // Update is called once per frame
@@ -73,9 +86,37 @@ public class Player : MonoBehaviour
 		}
 	    }
 	}
+
+	// gravity
+	if (this.onGroundSeconds <= 0) {
+	    if (this.yMomentum > -1 * this.GravityMaxSpeed) {
+		this.yMomentum -= this.GravityAcceleration;
+	    }
+	} else {
+	    if (this.yMomentum < 0) {
+		this.yMomentum = 0;
+	    }
+	    this.onGroundSeconds -= Time.deltaTime;
+	}
 	
 	// apply momentum
 	Vector3 forwardVector = this.isScurrying ? Vector3.down : Vector3.left;
+	Vector3 upVector = this.isScurrying ? Vector3.left : Vector3.up;
 	this.transform.Translate(forwardVector * Time.deltaTime * this.xMomentum);
+	this.transform.Translate(upVector * Time.deltaTime * this.yMomentum);
     }
+
+        // Ontriggerstay2d called when this collides with another BoxCollider2D w/ isTrigger=true
+    void OnTriggerStay2D(Collider2D collider)
+    {	
+	JumpTrigger collidedJumpTrigger = collider.gameObject.GetComponent<JumpTrigger>();
+	if (collidedJumpTrigger != null && this.gameObject.GetComponent<Rigidbody2D>().velocity.y < 0.1) {
+	    this.onGroundSeconds = this.CoyoteTimeSeconds;
+	    
+	    // TODO: this will break when jump is added
+	    Platform parentPlatform = collidedJumpTrigger.transform.parent.GetComponent<Platform>();
+	    this.transform.position = new Vector3(this.transform.position.x, parentPlatform.transform.position.y + 0.5f * parentPlatform.height + (this.isScurrying ? 0.36f : 0.5f), 0);
+	}
+    }
+
 }
