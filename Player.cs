@@ -8,24 +8,38 @@ public class Player : MonoBehaviour
     private float SCURRYHEIGHTDELTA = 0.38f;
     
     // configurables
-    private float WalkDrag = 30;
-    private float WalkAcceleration = 20;
-    private float WalkMaxSpeed = 6;    
+    public float WalkDrag = 40;
+    public float WalkAcceleration = 40;
+    public float WalkMaxSpeed = 8;    
+    public float WalkJumpBoostPower = 16;
+    
+    public float ScurryDrag = 40;
+    public float ScurryAcceleration = 40;
+    public float ScurryMaxSpeed = 12;
+    public float ScurryJumpBoostPower = 4;
 
-    private float ScurryDrag = 15;
-    private float ScurryAcceleration = 12;
-    private float ScurryMaxSpeed = 12;    
+    public float GravityAcceleration = 4;
+    public float GravityMaxSpeed = 10;
 
-    private float GravityAcceleration = 4;
-    private float GravityMaxSpeed = 8;
-
-    private float CoyoteTimeSeconds = 0.1f;
+    public float MaxOnGroundSeconds = 0.1f;
+    public float MaxJumpBoostSeconds = 0.2f;
     
     // movement
     private float xMomentum;
     private float yMomentum;
     private bool isScurrying;
     private float onGroundSeconds;
+
+    private float jumpBoostSeconds;
+    private int jumpsRemaining;
+    
+    private bool facingRight;
+
+    // animation
+    // 0, 1 - walk right / left
+    // 2, 3 - scurry right / left
+    public Sprite[] frames;
+
     
     // Start is called before the first frame update
     void Start()
@@ -43,10 +57,16 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // get inputs
+	this.MovePlayer();
+	this.AnimatePlayer();
+    }
+
+    private void MovePlayer() {
+	// get inputs
 	bool left = Input.GetKey("a");
 	bool right = Input.GetKey("d");
-	bool scurry = Input.GetKey("left shift");
+	bool scurry = Input.GetKey("s");
+	bool jump = Input.GetKey("space");
 
 	if (!this.isScurrying && scurry) {
 	    this.isScurrying = true;
@@ -64,11 +84,13 @@ public class Player : MonoBehaviour
 	float maxSpeed = this.isScurrying ? this.ScurryMaxSpeed : this.WalkMaxSpeed;
 	
 	if (left && !right) {
+	    this.facingRight = false;
 	    if (this.xMomentum < maxSpeed) {
 		this.xMomentum += acceleration * Time.deltaTime;
 	    }
 	}
 	if (right && !left) {
+	    this.facingRight = true;
 	    if (this.xMomentum > -1 * maxSpeed) {
 		this.xMomentum -= acceleration * Time.deltaTime;
 	    }
@@ -87,8 +109,28 @@ public class Player : MonoBehaviour
 	    }
 	}
 
+	// jumping
+	if (jump && this.jumpBoostSeconds <= 0 && this.onGroundSeconds >= this.MaxOnGroundSeconds && this.jumpsRemaining > 0) {
+	    float jumpBoost = this.isScurrying ? this.ScurryJumpBoostPower : this.WalkJumpBoostPower;
+	    this.jumpsRemaining -= 1;
+	    this.jumpBoostSeconds = this.MaxJumpBoostSeconds;
+	    this.yMomentum = jumpBoost;
+
+	    // scurry jump also boost forward
+	    if (this.isScurrying) {
+		this.xMomentum += (this.facingRight ? -1 : 1) * jumpBoost;
+	    }
+	}
+	
+	if (this.jumpBoostSeconds > 0) {
+	    this.jumpBoostSeconds -= Time.deltaTime;
+	    if (this.jumpBoostSeconds < 0) {
+		this.jumpBoostSeconds = 0;
+	    }	    
+	}
+	
 	// gravity
-	if (this.onGroundSeconds <= 0) {
+	if (this.onGroundSeconds <= 0 && this.jumpBoostSeconds <= 0) {
 	    if (this.yMomentum > -1 * this.GravityMaxSpeed) {
 		this.yMomentum -= this.GravityAcceleration;
 	    }
@@ -106,16 +148,32 @@ public class Player : MonoBehaviour
 	this.transform.Translate(upVector * Time.deltaTime * this.yMomentum);
     }
 
+    private void AnimatePlayer() {
+	// TODO: will break with more animation
+	int frameNumber = (this.facingRight ? 1 : 0) + (this.isScurrying ? 2 : 0);
+	this.GetComponent<SpriteRenderer>().sprite = this.frames[frameNumber];
+    }
+
         // Ontriggerstay2d called when this collides with another BoxCollider2D w/ isTrigger=true
     void OnTriggerStay2D(Collider2D collider)
-    {	
+    {
+	// check if on platform
 	JumpTrigger collidedJumpTrigger = collider.gameObject.GetComponent<JumpTrigger>();
-	if (collidedJumpTrigger != null && this.gameObject.GetComponent<Rigidbody2D>().velocity.y < 0.1) {
-	    this.onGroundSeconds = this.CoyoteTimeSeconds;
+	if (collidedJumpTrigger != null && this.yMomentum <= 0) {
+	    // increase timer for how long since player has been on the ground
+	    this.onGroundSeconds += 2 * Time.deltaTime;
+	    if (this.onGroundSeconds > this.MaxOnGroundSeconds) {
+		this.onGroundSeconds = this.MaxOnGroundSeconds;
+	    }
 	    
-	    // TODO: this will break when jump is added
-	    Platform parentPlatform = collidedJumpTrigger.transform.parent.GetComponent<Platform>();
-	    this.transform.position = new Vector3(this.transform.position.x, parentPlatform.transform.position.y + 0.5f * parentPlatform.height + (this.isScurrying ? 0.36f : 0.5f), 0);
+	    // glue player to top of platform and reset jumps
+	    if (this.jumpBoostSeconds <= 0) {		
+		Platform parentPlatform = collidedJumpTrigger.transform.parent.GetComponent<Platform>();
+		this.transform.position = new Vector3(this.transform.position.x, parentPlatform.transform.position.y + 0.5f * parentPlatform.height + (this.isScurrying ? 0.36f : 0.5f), 0);
+
+		// TODO: change if we have more than 1 jump
+		this.jumpsRemaining = 1;
+	    }
 	}
     }
 

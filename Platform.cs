@@ -25,7 +25,7 @@ public class Platform : MonoBehaviour
 	jumpTriggerGo.AddComponent<BoxCollider2D>();
 	jumpTriggerGo.GetComponent<BoxCollider2D>().isTrigger = true;
 	jumpTriggerGo.transform.parent = this.gameObject.transform;
-	jumpTriggerGo.transform.localScale = new Vector3(this.width, this.height * 0.75f, 1);
+	jumpTriggerGo.transform.localScale = new Vector3(this.width, this.height * 0.1f, 1);
 	jumpTriggerGo.transform.localPosition = new Vector3(0.0f, 0.25f, 0.0f);	
     }
 
