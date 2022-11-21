@@ -11,12 +11,14 @@ public class Player : MonoBehaviour
     public float WalkDrag = 40;
     public float WalkAcceleration = 40;
     public float WalkMaxSpeed = 8;    
-    public float WalkJumpBoostPower = 16;
+    public float WalkJumpBoostPower = 18;
     
     public float ScurryDrag = 40;
     public float ScurryAcceleration = 40;
     public float ScurryMaxSpeed = 12;
     public float ScurryJumpBoostPower = 4;
+    
+    public float ClimbingSpeed = 8;
 
     public float GravityAcceleration = 4;
     public float GravityMaxSpeed = 10;
@@ -28,6 +30,9 @@ public class Player : MonoBehaviour
     private float xMomentum;
     private float yMomentum;
     private bool isScurrying;
+    private bool isClimbing;
+    public ClimbingNode leftClimbingNode;
+    public ClimbingNode rightClimbingNode;
     private float onGroundSeconds;
 
     private float jumpBoostSeconds;
@@ -71,74 +76,89 @@ public class Player : MonoBehaviour
 	if (!this.isScurrying && scurry) {
 	    this.isScurrying = true;
 	    this.transform.Translate(Vector3.down * this.SCURRYHEIGHTDELTA);
+	    this.transform.rotation = new Quaternion(0, 0, 0, 0);
 	    this.transform.Rotate(new Vector3(0, 0, 270));
 	} else if (this.isScurrying && !scurry) {
 	    this.isScurrying = false;
-	    this.transform.Rotate(new Vector3(0, 0, -270));
+	    this.isClimbing = false;
+	    this.transform.rotation = new Quaternion(0, 0, 0, 0);
 	    this.transform.Translate(Vector3.up * this.SCURRYHEIGHTDELTA);
 	}
 	
 	// respond to inputs
-	float drag = this.isScurrying ? this.ScurryDrag : this.WalkDrag;
-	float acceleration = this.isScurrying ? this.ScurryAcceleration : this.WalkAcceleration;
-	float maxSpeed = this.isScurrying ? this.ScurryMaxSpeed : this.WalkMaxSpeed;
-	
-	if (left && !right) {
-	    this.facingRight = false;
-	    if (this.xMomentum < maxSpeed) {
-		this.xMomentum += acceleration * Time.deltaTime;
+	if (this.isClimbing) {
+	    if (left && !right) {
+		this.facingRight = false;
+		this.transform.rotation = Quaternion.FromToRotation(Vector3.up, this.transform.position - this.leftClimbingNode.transform.position);
+		this.transform.Translate(Vector3.down * this.ClimbingSpeed * Time.deltaTime);
 	    }
-	}
-	if (right && !left) {
-	    this.facingRight = true;
-	    if (this.xMomentum > -1 * maxSpeed) {
-		this.xMomentum -= acceleration * Time.deltaTime;
-	    }
-	}
-	if ((!right && !left) || this.xMomentum > maxSpeed || this.xMomentum < -1 * maxSpeed) {
-	    if (this.xMomentum > 0) {
-		this.xMomentum -= drag * Time.deltaTime;
-		if (this.xMomentum < 0) {
-		    this.xMomentum = 0;
-		}
-	    } else if (this.xMomentum < 0) {
-		this.xMomentum += drag * Time.deltaTime;
-		if (this.xMomentum > 0) {
-		    this.xMomentum = 0;
-		}
-	    }
-	}
-
-	// jumping
-	if (jump && this.jumpBoostSeconds <= 0 && this.onGroundSeconds >= this.MaxOnGroundSeconds && this.jumpsRemaining > 0) {
-	    float jumpBoost = this.isScurrying ? this.ScurryJumpBoostPower : this.WalkJumpBoostPower;
-	    this.jumpsRemaining -= 1;
-	    this.jumpBoostSeconds = this.MaxJumpBoostSeconds;
-	    this.yMomentum = jumpBoost;
-
-	    // scurry jump also boost forward
-	    if (this.isScurrying) {
-		this.xMomentum += (this.facingRight ? -1 : 1) * jumpBoost;
-	    }
-	}
-	
-	if (this.jumpBoostSeconds > 0) {
-	    this.jumpBoostSeconds -= Time.deltaTime;
-	    if (this.jumpBoostSeconds < 0) {
-		this.jumpBoostSeconds = 0;
-	    }	    
-	}
-	
-	// gravity
-	if (this.onGroundSeconds <= 0 && this.jumpBoostSeconds <= 0) {
-	    if (this.yMomentum > -1 * this.GravityMaxSpeed) {
-		this.yMomentum -= this.GravityAcceleration;
+	    if (right && !left) {
+		this.facingRight = true;
+		this.transform.rotation = Quaternion.FromToRotation(Vector3.down, this.transform.position - this.rightClimbingNode.transform.position);
+		this.transform.Translate(Vector3.up * this.ClimbingSpeed * Time.deltaTime);
 	    }
 	} else {
-	    if (this.yMomentum < 0) {
-		this.yMomentum = 0;
+	    float drag = this.isScurrying ? this.ScurryDrag : this.WalkDrag;
+	    float acceleration = this.isScurrying ? this.ScurryAcceleration : this.WalkAcceleration;
+	    float maxSpeed = this.isScurrying ? this.ScurryMaxSpeed : this.WalkMaxSpeed;
+	
+	    if (left && !right) {
+		this.facingRight = false;
+		if (this.xMomentum < maxSpeed) {
+		    this.xMomentum += acceleration * Time.deltaTime;
+		}
 	    }
-	    this.onGroundSeconds -= Time.deltaTime;
+	    if (right && !left) {
+		this.facingRight = true;
+		if (this.xMomentum > -1 * maxSpeed) {
+		    this.xMomentum -= acceleration * Time.deltaTime;
+		}
+	    }
+	    if ((!right && !left) || this.xMomentum > maxSpeed || this.xMomentum < -1 * maxSpeed) {
+		if (this.xMomentum > 0) {
+		    this.xMomentum -= drag * Time.deltaTime;
+		    if (this.xMomentum < 0) {
+			this.xMomentum = 0;
+		    }
+		} else if (this.xMomentum < 0) {
+		    this.xMomentum += drag * Time.deltaTime;
+		    if (this.xMomentum > 0) {
+			this.xMomentum = 0;
+		    }
+		}
+	    }
+
+	    // jumping
+	    if (jump && this.jumpBoostSeconds <= 0 && this.onGroundSeconds >= this.MaxOnGroundSeconds && this.jumpsRemaining > 0) {
+		float jumpBoost = this.isScurrying ? this.ScurryJumpBoostPower : this.WalkJumpBoostPower;
+		this.jumpsRemaining -= 1;
+		this.jumpBoostSeconds = this.MaxJumpBoostSeconds;
+		this.yMomentum = jumpBoost;
+
+		// scurry jump also boost forward
+		if (this.isScurrying) {
+		    this.xMomentum += (this.facingRight ? -1 : 1) * jumpBoost;
+		}
+	    }
+	
+	    if (this.jumpBoostSeconds > 0) {
+		this.jumpBoostSeconds -= Time.deltaTime;
+		if (this.jumpBoostSeconds < 0) {
+		    this.jumpBoostSeconds = 0;
+		}	    
+	    }
+	
+	    // gravity
+	    if (this.onGroundSeconds <= 0 && this.jumpBoostSeconds <= 0) {
+		if (this.yMomentum > -1 * this.GravityMaxSpeed) {
+		    this.yMomentum -= this.GravityAcceleration;
+		}
+	    } else {
+		if (this.yMomentum < 0) {
+		    this.yMomentum = 0;
+		}
+		this.onGroundSeconds -= Time.deltaTime;
+	    }
 	}
 	
 	// apply momentum
@@ -157,7 +177,7 @@ public class Player : MonoBehaviour
         // Ontriggerstay2d called when this collides with another BoxCollider2D w/ isTrigger=true
     void OnTriggerStay2D(Collider2D collider)
     {
-	// check if on platform
+	// platform triggers
 	JumpTrigger collidedJumpTrigger = collider.gameObject.GetComponent<JumpTrigger>();
 	if (collidedJumpTrigger != null && this.yMomentum <= 0) {
 	    // increase timer for how long since player has been on the ground
@@ -173,6 +193,32 @@ public class Player : MonoBehaviour
 
 		// TODO: change if we have more than 1 jump
 		this.jumpsRemaining = 1;
+	    }
+	}
+	
+	// climbing nodes
+	ClimbingNode collidedClimbingNode = collider.gameObject.GetComponent<ClimbingNode>();
+	if (collidedClimbingNode != null) {
+	    if (collidedClimbingNode.isGrabbable && this.isScurrying && !this.isClimbing) {
+		this.isClimbing = true;
+		if (collidedClimbingNode.left != null) {
+		    this.leftClimbingNode = collidedClimbingNode.left;
+		    this.rightClimbingNode = collidedClimbingNode;
+		} else {
+		    this.leftClimbingNode = collidedClimbingNode;
+		    this.rightClimbingNode = collidedClimbingNode.right;
+		}
+		this.xMomentum = 0;
+		this.yMomentum = 0;
+		this.transform.position = collidedClimbingNode.transform.position;
+	    } else if (this.isClimbing) {
+		if (this.facingRight) {
+		    this.leftClimbingNode = collidedClimbingNode;
+		    this.rightClimbingNode = collidedClimbingNode.right != null ? collidedClimbingNode.right : collidedClimbingNode;
+		} else {
+		    this.leftClimbingNode = collidedClimbingNode.left != null ? collidedClimbingNode.left : collidedClimbingNode;
+		    this.rightClimbingNode = collidedClimbingNode;
+		}
 	    }
 	}
     }
