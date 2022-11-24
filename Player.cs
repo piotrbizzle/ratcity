@@ -190,7 +190,7 @@ public class Player : MonoBehaviour
     private void ActionPlayer() {
 	// get inputs
 	bool hit = Input.GetKey("j");
-	if (hit) {
+	if (hit && !this.isScurrying) {
 	    this.fist.StartHitting();
 	}
     }

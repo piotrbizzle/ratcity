@@ -5,7 +5,6 @@ using UnityEngine;
 public class Zone : MonoBehaviour
 {
     // configurables
-    // TODO: possible optimization deleting nodes
     public Node TopLeftCornerNode;
     public Node BottomRightCornerNode;
     public Player player;

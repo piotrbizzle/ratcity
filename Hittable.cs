@@ -5,7 +5,7 @@ using UnityEngine;
 public class Hittable : MonoBehaviour
 {
     // Start is called before the first frame update
-    void Start()
+    public virtual void Start()
     {
 	// collision
         this.gameObject.AddComponent<BoxCollider2D>();
@@ -21,7 +21,8 @@ public class Hittable : MonoBehaviour
     void OnTriggerStay2D(Collider2D collider)
     {
 	PlayerFist collidedPlayerFist = collider.gameObject.GetComponent<PlayerFist>();
-	if (collidedPlayerFist != null && collidedPlayerFist.IsHitting()) {
+	if (collidedPlayerFist != null && collidedPlayerFist.IsHitting() && !collidedPlayerFist.hasHit) {
+	    collidedPlayerFist.hasHit = true;
 	    this.GetHit();
 	}
     }

@@ -6,11 +6,13 @@ public class PlayerFist : MonoBehaviour
 {    
     // configurables
     private float MaxHittingTime = .2f;
-    private float MaxHittingCooldown = .8f;
+    private float MaxHittingCooldown = .4f;
 
     // counters
     private float currentHittingTime;
     private float currentHittingCooldown;
+
+    public bool hasHit; // can only hit one hittable. hm.
 
     // Start is called before the first frame update
     void Start()
@@ -43,6 +45,7 @@ public class PlayerFist : MonoBehaviour
 	if (this.currentHittingCooldown > 0) {
 	    return;
 	}
+	this.hasHit = false;
 	this.currentHittingTime = this.MaxHittingTime;
 	this.currentHittingCooldown = this.MaxHittingCooldown;
 	this.SetVisible(true);
