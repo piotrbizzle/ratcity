@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
     public float ScurryJumpBoostPower = 4;
     
     public float ClimbingSpeed = 8;
+    public float ZiplineSpeed = 16;
 
     public float GravityAcceleration = 4;
     public float GravityMaxSpeed = 12;
@@ -32,6 +33,8 @@ public class Player : MonoBehaviour
     private float yMomentum;
     private bool isScurrying;
     private bool isClimbing;
+    private bool isZiplining;
+    private bool isZipliningRight;
     public ClimbingNode leftClimbingNode;
     public ClimbingNode rightClimbingNode;
     private float onGroundSeconds;
@@ -90,9 +93,13 @@ public class Player : MonoBehaviour
 	    this.transform.Translate(Vector3.up * this.SCURRYHEIGHTDELTA);
 	}
 	
-	// climbing
+	// climbing and zipping
 	if (this.isClimbing) {
-	    this.Climb(left, right);
+	    if (this.isZiplining) {
+		this.Zipline();
+	    } else {
+		this.Climb(left, right);
+	    }
 	    return;
 	}
 
@@ -130,13 +137,25 @@ public class Player : MonoBehaviour
 	this.transform.Translate(upVector * Time.deltaTime * this.yMomentum);
     }
 
+    private void Zipline() {
+	if (this.isZipliningRight) {
+	    this.facingRight = true;
+	    this.transform.rotation = Quaternion.FromToRotation(Vector3.down, this.transform.position - this.rightClimbingNode.transform.position);
+	    this.transform.Translate(Vector3.up * this.ZiplineSpeed * Time.deltaTime);
+
+	} else {
+	    this.facingRight = false;
+	    this.transform.rotation = Quaternion.FromToRotation(Vector3.up, this.transform.position - this.leftClimbingNode.transform.position);
+	    this.transform.Translate(Vector3.down * this.ZiplineSpeed * Time.deltaTime);
+	}
+    }
+
     private void Climb(bool left, bool right) {
 	if (left && !right) {
 	    this.facingRight = false;
 	    this.transform.rotation = Quaternion.FromToRotation(Vector3.up, this.transform.position - this.leftClimbingNode.transform.position);
 	    this.transform.Translate(Vector3.down * this.ClimbingSpeed * Time.deltaTime);
-	}
-	if (right && !left) {
+	} else if (right && !left) {
 	    this.facingRight = true;
 	    this.transform.rotation = Quaternion.FromToRotation(Vector3.down, this.transform.position - this.rightClimbingNode.transform.position);
 	    this.transform.Translate(Vector3.up * this.ClimbingSpeed * Time.deltaTime);
@@ -242,12 +261,15 @@ public class Player : MonoBehaviour
 	    if (collidedClimbingNode.isGrabbable && this.isScurrying && !this.isClimbing) {
 		// grab onto end node
 		this.isClimbing = true;
+		this.isZiplining = collidedClimbingNode.isZipline;
 		if (collidedClimbingNode.left != null) {
 		    this.leftClimbingNode = collidedClimbingNode.left;
 		    this.rightClimbingNode = collidedClimbingNode;
+		    this.isZipliningRight = false;
 		} else {
 		    this.leftClimbingNode = collidedClimbingNode;
 		    this.rightClimbingNode = collidedClimbingNode.right;
+		    this.isZipliningRight = true;
 		}
 		this.xMomentum = 0;
 		this.yMomentum = 0;

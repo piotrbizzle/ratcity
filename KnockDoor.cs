@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class KnockDoor : Hittable {
     // configurables
-    public float[] KnockPattern;
+    public float[] knockPattern;
+    public Sprite openSprite;
 
     public int currentKnockIndex = -1;
     public float currentKnockCounter;
@@ -49,17 +50,19 @@ public class KnockDoor : Hittable {
 	this.currentKnockIndex += 1;
 
 	// completed knock sequence
-	if (this.currentKnockIndex >= this.KnockPattern.Length) {
+	if (this.currentKnockIndex >= this.knockPattern.Length) {
 	    this.openDoor();
 	    return;
 	}
 
 	// move to next item in knock sequence
-	this.currentKnockCounter = this.KnockPattern[this.currentKnockIndex];
+	this.currentKnockCounter = this.knockPattern[this.currentKnockIndex];
     }
 
-    private void openDoor() {
-	GameObject.Destroy(this.gameObject);
+    private void openDoor() {	
+	Destroy(this.GetComponent<BoxCollider2D>());
+	Destroy(this.GetComponent<Rigidbody2D>());
+	this.GetComponent<SpriteRenderer>().sprite = this.openSprite;
     }
 }
 

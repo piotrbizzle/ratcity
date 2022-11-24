@@ -5,7 +5,8 @@ using UnityEngine;
 public class ClimbingNode : MonoBehaviour
 {
     public bool isGrabbable;
-
+    public bool isZipline;
+    
     // grabbable nodes must have EITHER left or right
     public ClimbingNode left;
     public ClimbingNode right;
