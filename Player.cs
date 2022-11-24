@@ -21,7 +21,7 @@ public class Player : MonoBehaviour
     public float ClimbingSpeed = 8;
 
     public float GravityAcceleration = 4;
-    public float GravityMaxSpeed = 10;
+    public float GravityMaxSpeed = 12;
 
     public float MaxOnGroundSeconds = 0.1f;
     public float MaxJumpBoostSeconds = 0.2f;

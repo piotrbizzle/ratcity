@@ -26,7 +26,7 @@ public class Hittable : MonoBehaviour
 	}
     }
 
-    private void GetHit() {
-	Debug.Log("hit");
+    public virtual void GetHit() {
+	Debug.Log("player hit: " + this.gameObject.name);
     }
 }

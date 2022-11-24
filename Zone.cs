@@ -6,25 +6,29 @@ public class Zone : MonoBehaviour
 {
     // configurables
     // TODO: possible optimization deleting nodes
-    public Node TopLeftCorner;
-    public Node BottomRightCorner;
+    public Node TopLeftCornerNode;
+    public Node BottomRightCornerNode;
     public Player player;
     
-    public bool isActive;
-    
+    public bool containsPlayer;    
+    private Vector3 topLeftCorner;
+    private Vector3 bottomRightCorner;
 
-    public void Start() {
-	this.SetActive(this.isActive);	    
+    public virtual void Start() {
+	// get corner coordinates, then delete nodes
+	this.topLeftCorner = TopLeftCornerNode.transform.position;
+	this.bottomRightCorner = BottomRightCornerNode.transform.position;
+
+	GameObject.Destroy(TopLeftCornerNode.gameObject);
+	GameObject.Destroy(BottomRightCornerNode.gameObject);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-	bool zoneContainsPlayer = this.DoesZoneContainPlayer();
-	if (this.isActive && !zoneContainsPlayer) {
-	    this.SetActive(false);	    
-	} else if (!this.isActive && zoneContainsPlayer) {
-	    this.SetActive(true);
+    public virtual void Update() {
+	bool currentlyContainsPlayer = this.DoesZoneContainPlayer();
+	if (this.containsPlayer && !currentlyContainsPlayer) {
+	    this.OnPlayerExit();
+	} else if (!this.containsPlayer && currentlyContainsPlayer) {
+	    this.OnPlayerEnter();
 	}
     }
 
@@ -32,24 +36,23 @@ public class Zone : MonoBehaviour
 	Vector3 playerPosition = this.player.transform.position;
 
 	// top left
-	if (playerPosition.x < this.TopLeftCorner.transform.position.x || playerPosition.y > this.TopLeftCorner.transform.position.y) {
+	if (playerPosition.x < this.topLeftCorner.x || playerPosition.y > this.topLeftCorner.y) {
 	    return false;
 	}
 
 	// bottom right
-	if (playerPosition.x > this.BottomRightCorner.transform.position.x || playerPosition.y < this.BottomRightCorner.transform.position.y) {
+	if (playerPosition.x > this.bottomRightCorner.x || playerPosition.y < this.bottomRightCorner.y) {
 	    return false;
 	}
 
 	return true;
     }
 
-    private void SetActive(bool isActive) {
-	foreach (Transform child in this.transform) {
-	    child.gameObject.SetActive(isActive);
-	}
-	this.isActive = isActive;
+    public virtual void OnPlayerEnter() {
+	Debug.Log("player enter: " + this.gameObject.name);
     }
 
-
+    public virtual void OnPlayerExit() {
+	Debug.Log("player exit: " + this.gameObject.name);
+    }
 }
