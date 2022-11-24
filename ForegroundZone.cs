@@ -8,8 +8,8 @@ public class ForegroundZone : Zone
     private float MaxTransitionTime = .2f;
 
     // counters
-    private float currentFadeInTime;
-    private float currentFadeOutTime;
+    public float currentFadeInTime;
+    public float currentFadeOutTime;
     
     public override void Update() {
 	base.Update();
@@ -29,12 +29,12 @@ public class ForegroundZone : Zone
     }
 
     public override void OnPlayerEnter() {
-	this.currentFadeInTime = this.MaxTransitionTime;
-	this.currentFadeOutTime = 0;
+	this.currentFadeOutTime = this.MaxTransitionTime;
+	this.currentFadeInTime = 0;
     }
 
     public override void OnPlayerExit() {
-	this.currentFadeOutTime = this.MaxTransitionTime;
-	this.currentFadeInTime = 0;
+	this.currentFadeInTime = this.MaxTransitionTime;
+	this.currentFadeOutTime = 0;
     }
 }

@@ -26,8 +26,10 @@ public class Zone : MonoBehaviour
     public virtual void Update() {
 	bool currentlyContainsPlayer = this.DoesZoneContainPlayer();
 	if (this.containsPlayer && !currentlyContainsPlayer) {
+	    this.containsPlayer = false;
 	    this.OnPlayerExit();
 	} else if (!this.containsPlayer && currentlyContainsPlayer) {
+	    this.containsPlayer = true;
 	    this.OnPlayerEnter();
 	}
     }
