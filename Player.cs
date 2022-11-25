@@ -44,6 +44,8 @@ public class Player : MonoBehaviour
     
     private bool facingRight;
     public bool forcedToScurry;
+    public bool isInDialogue;
+    public int choiceIndex;
 
     // animation
     // 0, 1 - walk right / left
@@ -52,6 +54,7 @@ public class Player : MonoBehaviour
 
     // related objects
     public PlayerFist fist;
+    public InkStory inkStory;
     
     // Start is called before the first frame update
     void Start()
@@ -69,9 +72,34 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-	this.MovePlayer();
-	this.ActionPlayer();
+	if (this.isInDialogue) {
+	    this.DialogueMenu();
+	} else {
+	    this.MovePlayer();
+	    this.ActionPlayer();
+	}
 	this.AnimatePlayer();
+    }
+
+    private void DialogueMenu() {
+	// get inputs
+	bool up = Input.GetKeyDown("w");
+	bool down = Input.GetKeyDown("s");
+	bool choose = Input.GetKeyDown("j");
+
+	if (choose) {
+	    this.inkStory.Choose(this.choiceIndex);
+	    this.choiceIndex = 0;
+	    return;
+	}
+
+	if (up && !down && this.choiceIndex > 0) {
+	    this.choiceIndex -= 1;
+	    this.inkStory.RefreshView(this.choiceIndex);
+	} else if (down && !up && this.choiceIndex < this.inkStory.story.currentChoices.Count - 1) {
+	    this.choiceIndex += 1;
+	    this.inkStory.RefreshView(this.choiceIndex);
+	}
     }
 
     private void MovePlayer() {
@@ -209,7 +237,7 @@ public class Player : MonoBehaviour
 
     private void ActionPlayer() {
 	// get inputs
-	bool hit = Input.GetKey("j");
+	bool hit = Input.GetKeyDown("j");
 	if (hit && !this.isScurrying) {
 	    this.fist.StartHitting();
 	}
