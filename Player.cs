@@ -43,6 +43,7 @@ public class Player : MonoBehaviour
     private int jumpsRemaining;
     
     private bool facingRight;
+    public bool forcedToScurry;
 
     // animation
     // 0, 1 - walk right / left
@@ -81,12 +82,12 @@ public class Player : MonoBehaviour
 	bool jump = Input.GetKey("space");
 
 	// scurry vs walk
-	if (!this.isScurrying && scurry) {
+	if (!this.isScurrying && (scurry || this.forcedToScurry)) {
 	    this.isScurrying = true;
 	    this.transform.Translate(Vector3.down * this.SCURRYHEIGHTDELTA);
 	    this.transform.rotation = new Quaternion(0, 0, 0, 0);
 	    this.transform.Rotate(new Vector3(0, 0, 270));
-	} else if (this.isScurrying && !scurry) {
+	} else if (this.isScurrying && !scurry && !this.forcedToScurry) {
 	    this.isScurrying = false;
 	    this.isClimbing = false;
 	    this.transform.rotation = new Quaternion(0, 0, 0, 0);

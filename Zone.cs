@@ -7,6 +7,8 @@ public class Zone : MonoBehaviour
     // configurables
     public Node TopLeftCornerNode;
     public Node BottomRightCornerNode;
+    
+    // TODO: consider getting player programatically
     public Player player;
     
     public bool containsPlayer;    
