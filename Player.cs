@@ -66,7 +66,7 @@ public class Player : MonoBehaviour
 	rb.gravityScale = 0.0f;
 	rb.constraints = RigidbodyConstraints2D.FreezeRotation;
 	rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
-	rb.sleepMode = RigidbodySleepMode2D.NeverSleep;	
+	rb.sleepMode = RigidbodySleepMode2D.NeverSleep;
     }
 
     // Update is called once per frame
@@ -109,6 +109,9 @@ public class Player : MonoBehaviour
 	bool scurry = Input.GetKey("s");
 	bool jump = Input.GetKey("space");
 
+	// decide whether to be solid or not
+	this.GetComponent<BoxCollider2D>().enabled = !this.isClimbing;
+
 	// scurry vs walk
 	if (!this.isScurrying && (scurry || this.forcedToScurry)) {
 	    this.isScurrying = true;
@@ -117,7 +120,7 @@ public class Player : MonoBehaviour
 	    this.transform.Rotate(new Vector3(0, 0, 270));
 	} else if (this.isScurrying && !scurry && !this.forcedToScurry) {
 	    this.isScurrying = false;
-	    this.isClimbing = false;
+	    this.isClimbing = false;	    
 	    this.transform.rotation = new Quaternion(0, 0, 0, 0);
 	    this.transform.Translate(Vector3.up * this.SCURRYHEIGHTDELTA);
 	}
