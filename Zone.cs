@@ -8,7 +8,6 @@ public class Zone : MonoBehaviour
     public Node TopLeftCornerNode;
     public Node BottomRightCornerNode;
     
-    // TODO: consider getting player programatically
     public Player player;
     
     public bool containsPlayer;    
@@ -16,6 +15,9 @@ public class Zone : MonoBehaviour
     private Vector3 bottomRightCorner;
 
     public virtual void Start() {
+	// get player
+	this.player = GameObject.Find("/player").GetComponent<Player>();
+
 	// get corner coordinates, then delete nodes
 	this.topLeftCorner = TopLeftCornerNode.transform.position;
 	this.bottomRightCorner = BottomRightCornerNode.transform.position;
