@@ -12,7 +12,8 @@ public class PlayerFist : MonoBehaviour
     private float currentHittingTime;
     private float currentHittingCooldown;
 
-    public bool hasHit; // can only hit one hittable. hm.
+    // TODO: build list of hit objects and "hit" the highest priority one ?
+    public bool hasHit;
 
     // Start is called before the first frame update
     void Start()

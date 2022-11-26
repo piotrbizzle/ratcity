@@ -23,11 +23,11 @@ public class Hittable : MonoBehaviour
 	PlayerFist collidedPlayerFist = collider.gameObject.GetComponent<PlayerFist>();
 	if (collidedPlayerFist != null && collidedPlayerFist.IsHitting() && !collidedPlayerFist.hasHit) {
 	    collidedPlayerFist.hasHit = true;
-	    this.GetHit();
+	    this.GetHit(collidedPlayerFist.transform.parent.GetComponent<Player>());
 	}
     }
 
-    public virtual void GetHit() {
+    public virtual void GetHit(Player player) {
 	Debug.Log("player hit: " + this.gameObject.name);
     }
 }

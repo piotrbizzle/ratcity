@@ -44,9 +44,14 @@ public class Player : MonoBehaviour
     
     private bool facingRight;
     public bool forcedToScurry;
+
+    // dialogue
     public bool isInDialogue;
     public int choiceIndex;
 
+    // inventory
+    public bool isInInventory;    
+    
     // animation
     // 0, 1 - walk right / left
     // 2, 3 - scurry right / left
@@ -55,6 +60,7 @@ public class Player : MonoBehaviour
     // related objects
     public PlayerFist fist;
     public InkStory inkStory;
+    public InventoryScreen inventory;
     
     // Start is called before the first frame update
     void Start()
@@ -72,13 +78,26 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-	if (this.isInDialogue) {
+	// TODO: move out inventory and dialogue controls to separate files
+	if (this.isInInventory) {
+	    this.InventoryMenu();
+	} else if (this.isInDialogue) {
 	    this.DialogueMenu();
 	} else {
 	    this.MovePlayer();
 	    this.ActionPlayer();
 	}
 	this.AnimatePlayer();
+    }
+
+    private void InventoryMenu() {
+	// inputs
+	bool closeInventory = Input.GetKeyDown("i");
+
+	if (closeInventory) {
+	    this.inventory.CloseInventory();
+	    this.isInInventory = false;
+	}
     }
 
     private void DialogueMenu() {
@@ -169,6 +188,20 @@ public class Player : MonoBehaviour
 	this.transform.Translate(upVector * Time.deltaTime * this.yMomentum);
     }
 
+    private void ActionPlayer() {
+	// get inputs
+	bool hit = Input.GetKeyDown("j");
+	bool openInventory = Input.GetKeyDown("i");
+
+	if (openInventory) {
+	    this.isInInventory = true;
+	    this.inventory.OpenInventory();
+	}
+	if (hit && !this.isScurrying) {
+	    this.fist.StartHitting();
+	}
+    }    
+    
     private void Zipline() {
 	if (this.isZipliningRight) {
 	    this.facingRight = true;
@@ -238,13 +271,6 @@ public class Player : MonoBehaviour
 	}       
     }
 
-    private void ActionPlayer() {
-	// get inputs
-	bool hit = Input.GetKeyDown("j");
-	if (hit && !this.isScurrying) {
-	    this.fist.StartHitting();
-	}
-    }
 
     private void AnimatePlayer() {
 	// player frames

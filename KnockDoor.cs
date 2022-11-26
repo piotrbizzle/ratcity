@@ -41,7 +41,7 @@ public class KnockDoor : Hittable {
 	}	
     }
     
-    public override void GetHit() {
+    public override void GetHit(Player player) {
 	// don't let sequence start if on cooldown
 	if (this.currentKnockCooldown > 0) {
 	    return;

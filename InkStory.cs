@@ -7,7 +7,6 @@ using Ink.Runtime;
 
 public class InkStory : MonoBehaviour {
     public TextAsset inkJSONAsset;
-    public Canvas canvas;
     public Story story;
 
     // UI Prefabs
@@ -15,8 +14,9 @@ public class InkStory : MonoBehaviour {
     public GameObject dialogueChoiceGroupPrefab;
     public Text dialogueChoiceTextPrefab;
 
-    // related object
+    // related objects
     public Player player;
+    public Canvas canvas;
     
     public void Start() {
 	this.story = new Story(inkJSONAsset.text);
