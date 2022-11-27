@@ -80,7 +80,7 @@ public class Player : MonoBehaviour
     {
 	// TODO: move out inventory and dialogue controls to separate files
 	if (this.isInInventory) {
-	    this.InventoryMenu();
+	    this.isInInventory = this.inventory.ControlMenu();
 	} else if (this.isInDialogue) {
 	    this.DialogueMenu();
 	} else {
@@ -88,16 +88,6 @@ public class Player : MonoBehaviour
 	    this.ActionPlayer();
 	}
 	this.AnimatePlayer();
-    }
-
-    private void InventoryMenu() {
-	// inputs
-	bool closeInventory = Input.GetKeyDown("i");
-
-	if (closeInventory) {
-	    this.inventory.CloseInventory();
-	    this.isInInventory = false;
-	}
     }
 
     private void DialogueMenu() {

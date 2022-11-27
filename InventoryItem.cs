@@ -9,11 +9,12 @@ public class InventoryItem : MonoBehaviour {
     public string itemShapeName;
     public float widthPx;
     public float heightPx;
-
+    
     // positioning in menu
     public int x;
     public int y;
     public float rotation;
+    public bool isSelected;
     
     // registry for convenience / because this is not configurable in unity : (
     // NB: items are mirrored vertically
