@@ -16,18 +16,6 @@ public class InventoryScreen : MonoBehaviour
     // related objects
     public Canvas canvas;
     public InventoryItem selectedItem;
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public void OpenInventory() {
 	this.RefreshInventory();
@@ -52,8 +40,15 @@ public class InventoryScreen : MonoBehaviour
 	    
 	    // position and scale
 	    RectTransform itemRect = itemImage.GetComponent<RectTransform>();
-	    itemRect.anchoredPosition = new Vector2(-300 + inventoryItem.widthPx / 2 + 100 * inventoryItem.x, -200 + inventoryItem.heightPx / 2 + 100 * inventoryItem.y);
-	    itemRect.sizeDelta = new Vector2(inventoryItem.widthPx, inventoryItem.heightPx);
+	    itemRect.Rotate(0, 0, 90 * inventoryItem.rotation);	   
+	    itemRect.anchoredPosition = new Vector2(-300 + inventoryItem.width * 50 + 100 * inventoryItem.x, -200 + inventoryItem.height * 50 + 100 * inventoryItem.y);
+
+	    // even i don't understand why this is needed
+	    if (inventoryItem.rotation % 2 == 1) {
+		itemRect.anchoredPosition += new Vector2(-50 * (inventoryItem.width - inventoryItem.height), 50 * (inventoryItem.width - inventoryItem.height));
+	    }
+	    
+	    itemRect.sizeDelta = new Vector2(inventoryItem.width * 100, inventoryItem.height * 100);
 
 	    // make transparent if selected
 	    if (inventoryItem.isSelected) {
@@ -77,6 +72,7 @@ public class InventoryScreen : MonoBehaviour
 	bool left = Input.GetKeyDown("a");
 	bool right = Input.GetKeyDown("d");
 	bool selected = Input.GetKeyDown("j");
+	bool rotate = Input.GetKeyDown("space");
 
 	// close
 	if (closeInventory) {
@@ -116,6 +112,23 @@ public class InventoryScreen : MonoBehaviour
 	    didScreenChange = true;
 	}
 
+	// rotate
+	if (rotate && this.selectedItem != null) {
+	    this.selectedItem.rotation += 1;
+	    this.selectedItem.rotation %= 4;
+
+	    // move rotated shape to cursor
+	    int relativeCursorX = this.cursorX - this.selectedItem.x;
+	    int relativeCursorY = this.cursorY - this.selectedItem.y;
+	    int translatedCursorX = (this.selectedItem.rotation % 2 == 0 ? this.selectedItem.width : this.selectedItem.height) - 1 - relativeCursorY;
+	    int translatedCursorY = relativeCursorX;
+	    this.selectedItem.x += relativeCursorX - translatedCursorX;
+	    this.selectedItem.y += relativeCursorY - translatedCursorY;
+
+	    
+	    didScreenChange = true;	    
+	}
+
 	// select and deselect
 	if (selected) {
 	    if (this.selectedItem == null || this.CanPlaceSelectedItem()) {
@@ -138,11 +151,8 @@ public class InventoryScreen : MonoBehaviour
 	return true;
     }
 
-    private bool CanPlaceSelectedItem() {
-	// ASSUMES this.selectedItem != null
-	
-	// TODO: rotate item shape @_@
-	bool[][] itemShape = InventoryItem.ItemShapes[this.selectedItem.itemShapeName];
+    private bool CanPlaceSelectedItem() {	
+	bool[][] itemShape = this.RotateItemShape(InventoryItem.ItemShapes[this.selectedItem.itemShapeName], selectedItem.rotation);
 	for (int i = 0; i < itemShape.Length; i++) {
 	    for (int j = 0; j < itemShape[i].Length; j++) {
 		if (!itemShape[i][j]) {
@@ -164,8 +174,7 @@ public class InventoryScreen : MonoBehaviour
 	foreach (Transform child in this.transform) {	    
 	    InventoryItem inventoryItem = child.GetComponent<InventoryItem>();
 
-	    // TODO: rotate item shape @_@
-	    bool[][] itemShape = InventoryItem.ItemShapes[inventoryItem.itemShapeName];
+	    bool[][] itemShape = this.RotateItemShape(InventoryItem.ItemShapes[inventoryItem.itemShapeName], inventoryItem.rotation);
 	    bool outOfBounds = false;
 	    for (int i = 0; i < itemShape.Length; i++) {
 		for (int j = 0; j < itemShape[i].Length; j++) {
@@ -203,8 +212,7 @@ public class InventoryScreen : MonoBehaviour
 		continue;
 	    }
 	    
-	    // TODO: rotate item shape @_@
-	    bool[][] itemShape = InventoryItem.ItemShapes[inventoryItem.itemShapeName];
+	    bool[][] itemShape = this.RotateItemShape(InventoryItem.ItemShapes[inventoryItem.itemShapeName], inventoryItem.rotation);
 	    for (int i = 0; i < itemShape.Length; i++) {
 		for (int j = 0; j < itemShape[i].Length; j++) {
 		    if (!itemShape[i][j]) {
@@ -213,13 +221,45 @@ public class InventoryScreen : MonoBehaviour
 		    int cellX = inventoryItem.x + j;
 		    int cellY = inventoryItem.y + i;
 
-		    if (cellX == x && cellY == y) {
+    		    if (cellX == x && cellY == y) {
 			return inventoryItem;
 		    }		    
 		}
 	    }
 	}
 	return null;
+    }
+
+    private bool[][] RotateItemShape(bool[][] itemShape, int rotation) {
+	// rotation: 0, 1, 2, 3 -> 0, 90, 180, 270
+
+	// create new empty array
+	int iLength = (rotation == 0 || rotation == 2) ? itemShape.Length : itemShape[0].Length;
+	int jLength = (rotation == 0 || rotation == 2) ? itemShape[0].Length : itemShape.Length;
+	bool[][] newItemShape = new bool[iLength][];
+
+	// there has to be a better way
+	for (int i = 0; i < iLength; i++) {
+	    newItemShape[i] = new bool[jLength];
+	}
+	
+	// populate array
+	for (int i = 0; i < itemShape.Length; i++) {
+	    for (int j = 0; j < itemShape[i].Length; j++) {
+		// this could be shorter, but writing out to keep it """readable"""
+		if (rotation == 0) {
+		    newItemShape[i][j] = itemShape[i][j];
+		} else if (rotation == 1) {		    
+		    newItemShape[j][jLength - 1 - i] = itemShape[i][j];
+		} else if (rotation == 2) {
+		    newItemShape[iLength - 1 - i][jLength - 1 - j] = itemShape[i][j];;
+		} else if (rotation == 3) {
+		    newItemShape[iLength - 1 - j][i] = itemShape[i][j];
+		}
+	    }
+	}
+
+	return newItemShape;
     }
     
     private void ClearView() {
@@ -228,3 +268,12 @@ public class InventoryScreen : MonoBehaviour
 	}
     }
 }
+
+
+
+
+
+
+
+
+

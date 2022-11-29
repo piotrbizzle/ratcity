@@ -5,15 +5,16 @@ using UnityEngine;
 public class InventoryItem : MonoBehaviour {
     public Sprite pickUpableSprite;
     public Sprite itemSprite;
-    public int itemRotation;
     public string itemShapeName;
-    public float widthPx;
-    public float heightPx;
+
+    // TODO: infer from shape
+    public int width; 
+    public int height;
     
     // positioning in menu
     public int x;
     public int y;
-    public float rotation;
+    public int rotation; // 0, 1, 2, 3 -> 0, 90, 180, 270
     public bool isSelected;
     
     // registry for convenience / because this is not configurable in unity : (
@@ -24,6 +25,16 @@ public class InventoryItem : MonoBehaviour {
 		new bool[] {true, false},
 		new bool[] {true, false},
 		new bool[] {true, true}, 
+	    }
+	},
+	{"DummyShape2", new bool[][] {
+		new bool[] {true, true, false},
+		new bool[] {false, true, true},
+		new bool[] {false, true, false}, 
+	    }
+	},
+	{"DummyShape3", new bool[][] {
+		new bool[] {true, true, true},
 	    }
 	},
     };
