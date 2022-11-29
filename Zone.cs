@@ -8,11 +8,12 @@ public class Zone : MonoBehaviour
     public Node TopLeftCornerNode;
     public Node BottomRightCornerNode;
     
-    public Player player;
-    
     public bool containsPlayer;    
     private Vector3 topLeftCorner;
     private Vector3 bottomRightCorner;
+
+    // related objects
+    public Player player;
 
     public virtual void Start() {
 	// get player
@@ -33,6 +34,7 @@ public class Zone : MonoBehaviour
 	    this.OnPlayerExit();
 	} else if (!this.containsPlayer && currentlyContainsPlayer) {
 	    this.containsPlayer = true;
+	    this.player.mostRecentZone = this;
 	    this.OnPlayerEnter();
 	}
     }

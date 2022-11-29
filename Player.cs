@@ -61,6 +61,7 @@ public class Player : MonoBehaviour
     public PlayerFist fist;
     public InkStory inkStory;
     public InventoryScreen inventory;
+    public Zone mostRecentZone;
     
     // Start is called before the first frame update
     void Start()
@@ -185,7 +186,7 @@ public class Player : MonoBehaviour
 
 	if (openInventory) {
 	    this.isInInventory = true;
-	    this.inventory.OpenInventory();
+	    this.inventory.OpenInventory(null);
 	}
 	if (hit && !this.isScurrying) {
 	    this.fist.StartHitting();

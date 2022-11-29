@@ -20,8 +20,20 @@ public class InventoryScreen : MonoBehaviour
     // related objects
     public Canvas canvas;
     public InventoryItem selectedItem;
+    public Player player;
+    
+    public void OpenInventory(InventoryItem newItemPrefab) {
+	if (newItemPrefab != null) {
+	    InventoryItem newItem = Instantiate(newItemPrefab);
+	    newItem.transform.SetParent(this.transform, false);
+	    newItem.isSelected = true;
+	    newItem.x = 0;
+	    newItem.y = 0;
 
-    public void OpenInventory() {
+	    this.selectedItem = newItem;
+	    this.cursorX = 0;
+	    this.cursorY = 0;
+	}
 	this.RefreshInventory();
     }
 	    
@@ -192,10 +204,11 @@ public class InventoryScreen : MonoBehaviour
 		    }
 		}
 	    }
-	    if (outOfBounds) {
-		Debug.Log("Hanging out: " + child.gameObject.name);
-	    } else {
-		Debug.Log("All good: " + child.gameObject.name);
+	    if (outOfBounds || inventoryItem.isSelected) {
+		// unselect and drop
+		this.selectedItem = null;	
+		inventoryItem.isSelected = false;
+		inventoryItem.BecomePickUpable(this.player);
 	    }
 	}
 	
@@ -270,6 +283,8 @@ public class InventoryScreen : MonoBehaviour
 	}
     }
 }
+
+
 
 
 

@@ -22,6 +22,6 @@ public class LoadingZone : Zone
 	foreach (Transform child in this.transform) {
 	    child.gameObject.SetActive(containsPlayer);
 	}
-	this.containsPlayer = containsPlayer;
+	this.player.mostRecentZone = this;
     }
 }

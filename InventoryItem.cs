@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class InventoryItem : MonoBehaviour {
     public Sprite pickUpableSprite;
+    
     public Sprite itemSprite;
     public string itemShapeName;
 
@@ -16,6 +17,18 @@ public class InventoryItem : MonoBehaviour {
     public int y;
     public int rotation; // 0, 1, 2, 3 -> 0, 90, 180, 270
     public bool isSelected;
+
+    public void BecomePickUpable(Player player) {
+	GameObject pickUpableGo = new GameObject();
+	pickUpableGo.AddComponent<SpriteRenderer>().sprite = this.pickUpableSprite;
+	pickUpableGo.GetComponent<SpriteRenderer>().sortingLayerName = "Items";
+	pickUpableGo.AddComponent<PickUpable>().inventoryItemPrefab = this;
+	pickUpableGo.transform.position = player.transform.position;
+
+	// TODO: what about zones?
+	
+	this.transform.SetParent(pickUpableGo.transform, false);
+    }    
     
     // registry for convenience / because this is not configurable in unity : (
     // NB: items are mirrored vertically
