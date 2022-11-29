@@ -8,6 +8,10 @@ public class InventoryScreen : MonoBehaviour
     public int cursorX;
     public int cursorY;
 
+    // TODO: make upgradable
+    private int inventoryWidth = 5;
+    private int inventoryHeight = 3;
+
     // UI prefabs
     public Image inventoryBackgroundPrefab;    
     public Image itemImagePrefab;
@@ -41,7 +45,7 @@ public class InventoryScreen : MonoBehaviour
 	    // position and scale
 	    RectTransform itemRect = itemImage.GetComponent<RectTransform>();
 	    itemRect.Rotate(0, 0, 90 * inventoryItem.rotation);	   
-	    itemRect.anchoredPosition = new Vector2(-300 + inventoryItem.width * 50 + 100 * inventoryItem.x, -200 + inventoryItem.height * 50 + 100 * inventoryItem.y);
+	    itemRect.anchoredPosition = new Vector2(-50 * this.inventoryWidth + inventoryItem.width * 50 + 100 * inventoryItem.x, -50 * this.inventoryHeight + inventoryItem.height * 50 + 100 * inventoryItem.y);
 
 	    // even i don't understand why this is needed
 	    if (inventoryItem.rotation % 2 == 1) {
@@ -60,7 +64,7 @@ public class InventoryScreen : MonoBehaviour
 	Image cursorImage = Instantiate(this.cursorPrefab);
 	cursorImage.transform.SetParent(this.canvas.transform, false);
 	RectTransform cursorRect = cursorImage.GetComponent<RectTransform>();
-	cursorRect.anchoredPosition = new Vector2(-250 + 100 * this.cursorX, -150 + 100 * cursorY);
+	cursorRect.anchoredPosition = new Vector2(-50 * this.inventoryWidth + 50 + 100 * this.cursorX, -50 * this.inventoryHeight + 50 + 100 * cursorY);
     }
 
     // returns whether menu should remain open
@@ -81,9 +85,8 @@ public class InventoryScreen : MonoBehaviour
 	}	
 	
 	// move cursor
-	// ASSUMES 6x4 inventory. cursor can go 1 space out of bounds
 	bool didScreenChange = false;
-	if (up && this.cursorY < 4) {
+	if (up && this.cursorY < this.inventoryHeight) {
 	    this.cursorY += 1;
 	    if (this.selectedItem != null) {
 		this.selectedItem.y += 1;
@@ -97,7 +100,7 @@ public class InventoryScreen : MonoBehaviour
 	    }
 	    didScreenChange = true;
 	}
-	if (right && this.cursorX < 6) {
+	if (right && this.cursorX < this.inventoryWidth) {
 	    this.cursorX += 1;
 	    if (this.selectedItem != null) {
 		this.selectedItem.x += 1;
@@ -184,8 +187,7 @@ public class InventoryScreen : MonoBehaviour
 		    int cellX = inventoryItem.x + j;
 		    int cellY = inventoryItem.y + i;
 		    // check if the item is hanging out of the inventory
-		    // ASSUMES inventory is 6x4
-		    if (cellX < 0 || cellX > 5 || cellY < 0 || cellY > 3) {
+		    if (cellX < 0 || cellX > this.inventoryWidth - 1 || cellY < 0 || cellY > this.inventoryHeight - 1) {
 			outOfBounds = true;
 		    }
 		}
