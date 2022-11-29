@@ -5,7 +5,6 @@ using UnityEngine;
 public class PickUpable : Hittable
 {
     // nomenclature: PickUpables become "items" when they are picked up
-    public InventoryItem inventoryItemPrefab;    
 
     public override void Start() {
 	base.Start();
@@ -14,7 +13,8 @@ public class PickUpable : Hittable
     
     public override void GetHit(Player player) {
 	player.isInInventory = true;
-	player.inventory.OpenInventory(this.inventoryItemPrefab);
+	// assumes inventory item is child
+	player.inventory.OpenInventory(this.transform.GetChild(0).GetComponent<InventoryItem>());
 	GameObject.Destroy(this.gameObject);
     }
 }

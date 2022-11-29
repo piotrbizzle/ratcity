@@ -22,17 +22,17 @@ public class InventoryScreen : MonoBehaviour
     public InventoryItem selectedItem;
     public Player player;
     
-    public void OpenInventory(InventoryItem newItemPrefab) {
-	if (newItemPrefab != null) {
-	    InventoryItem newItem = Instantiate(newItemPrefab);
+    public void OpenInventory(InventoryItem newItem) {
+	if (newItem != null) {
 	    newItem.transform.SetParent(this.transform, false);
 	    newItem.isSelected = true;
 	    newItem.x = 0;
 	    newItem.y = 0;
+	    newItem.rotation = 0;
 
 	    this.selectedItem = newItem;
 	    this.cursorX = 0;
-	    this.cursorY = 0;
+	    this.cursorY = 0;	    
 	}
 	this.RefreshInventory();
     }
@@ -66,10 +66,13 @@ public class InventoryScreen : MonoBehaviour
 	    
 	    itemRect.sizeDelta = new Vector2(inventoryItem.width * 100, inventoryItem.height * 100);
 
-	    // make transparent if selected
+	    // colorize for selection and out of bounds
 	    if (inventoryItem.isSelected) {
 		itemImage.color = new Color(1, 1, 1, 0.5f);
+	    } else if (inventoryItem.isOutOfBounds) {
+		itemImage.color = new Color(1, 0, 0, 0.5f);
 	    }
+	    
 	}
 
 	// add cursor
@@ -139,7 +142,6 @@ public class InventoryScreen : MonoBehaviour
 	    int translatedCursorY = relativeCursorX;
 	    this.selectedItem.x += relativeCursorX - translatedCursorX;
 	    this.selectedItem.y += relativeCursorY - translatedCursorY;
-
 	    
 	    didScreenChange = true;	    
 	}
@@ -149,6 +151,7 @@ public class InventoryScreen : MonoBehaviour
 	    if (this.selectedItem == null || this.CanPlaceSelectedItem()) {
 		InventoryItem itemAtCursor = this.GetItemAtPosition(this.cursorX, this.cursorY);
 		if (this.selectedItem != null) {
+		    this.selectedItem.isOutOfBounds = this.IsItemOutOfBounds(this.selectedItem);
 		    this.selectedItem.isSelected = false;
 		}
 		if (itemAtCursor != null) {
@@ -185,35 +188,54 @@ public class InventoryScreen : MonoBehaviour
     }
 	
     public void CloseInventory() {
-	// check whether items are stowed correctly
+	// check whether each item is stowed correctly
 	foreach (Transform child in this.transform) {	    
 	    InventoryItem inventoryItem = child.GetComponent<InventoryItem>();
 
-	    bool[][] itemShape = this.RotateItemShape(InventoryItem.ItemShapes[inventoryItem.itemShapeName], inventoryItem.rotation);
-	    bool outOfBounds = false;
-	    for (int i = 0; i < itemShape.Length; i++) {
-		for (int j = 0; j < itemShape[i].Length; j++) {
-		    if (!itemShape[i][j]) {
-			continue;
-		    }
-		    int cellX = inventoryItem.x + j;
-		    int cellY = inventoryItem.y + i;
-		    // check if the item is hanging out of the inventory
-		    if (cellX < 0 || cellX > this.inventoryWidth - 1 || cellY < 0 || cellY > this.inventoryHeight - 1) {
-			outOfBounds = true;
-		    }
+	    // try to place selected item
+	    if (inventoryItem.isSelected) {
+
+		// drop if it can't be placed
+		if (!this.CanPlaceSelectedItem()) {
+		    inventoryItem.markedForDrop = true;
+		    inventoryItem.isSelected = false;
+		    inventoryItem.dropPosition = this.player.transform.position;
+		    continue;
 		}
-	    }
-	    if (outOfBounds || inventoryItem.isSelected) {
-		// unselect and drop
-		this.selectedItem = null;	
+
+		// check if item is placed out of bounds
 		inventoryItem.isSelected = false;
-		inventoryItem.BecomePickUpable(this.player);
+		inventoryItem.isOutOfBounds = this.IsItemOutOfBounds(inventoryItem);
+	    }
+	    
+	    // drop items that are out of bounds
+	    if (inventoryItem.isOutOfBounds) {
+		inventoryItem.markedForDrop = true;
+		inventoryItem.dropPosition = this.player.transform.position;
 	    }
 	}
 	
 	// remove UI elements
+	this.selectedItem = null;
 	this.ClearView();
+    }
+
+    private bool IsItemOutOfBounds(InventoryItem inventoryItem) {
+	bool[][] itemShape = this.RotateItemShape(InventoryItem.ItemShapes[inventoryItem.itemShapeName], inventoryItem.rotation);
+	for (int i = 0; i < itemShape.Length; i++) {
+	    for (int j = 0; j < itemShape[i].Length; j++) {
+		if (!itemShape[i][j]) {
+		    continue;
+		}
+		int cellX = inventoryItem.x + j;
+		int cellY = inventoryItem.y + i;
+		// check if the item is hanging out of the inventory
+		if (cellX < 0 || cellX > this.inventoryWidth - 1 || cellY < 0 || cellY > this.inventoryHeight - 1) {
+		    return true;
+		}
+	    }
+	}
+	return false;
     }
 
     private InventoryItem GetItemAtPosition(int x, int y) {

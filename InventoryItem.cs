@@ -17,17 +17,27 @@ public class InventoryItem : MonoBehaviour {
     public int y;
     public int rotation; // 0, 1, 2, 3 -> 0, 90, 180, 270
     public bool isSelected;
+    public bool isOutOfBounds;
+    public bool markedForDrop;
+    public Vector3 dropPosition;
 
-    public void BecomePickUpable(Player player) {
+    public void Update() {
+	if (this.markedForDrop) {
+	    this.BecomePickUpable(this.dropPosition);
+	}
+    }
+    
+    public void BecomePickUpable(Vector3 dropPosition) {
 	GameObject pickUpableGo = new GameObject();
 	pickUpableGo.AddComponent<SpriteRenderer>().sprite = this.pickUpableSprite;
 	pickUpableGo.GetComponent<SpriteRenderer>().sortingLayerName = "Items";
-	pickUpableGo.AddComponent<PickUpable>().inventoryItemPrefab = this;
-	pickUpableGo.transform.position = player.transform.position;
+	pickUpableGo.AddComponent<PickUpable>();
+	pickUpableGo.transform.position = dropPosition;
 
 	// TODO: what about zones?
 	
 	this.transform.SetParent(pickUpableGo.transform, false);
+	this.markedForDrop = false;
     }    
     
     // registry for convenience / because this is not configurable in unity : (
