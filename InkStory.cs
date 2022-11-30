@@ -38,6 +38,7 @@ public class InkStory : MonoBehaviour {
     
     public void RefreshView(int choiceIndex) {
 	this.ClearView();
+	this.UpdateInventory();
 	
 	// dialogue box	
 	Image dialogueBox = Instantiate(this.dialogueBoxPrefab);
@@ -65,6 +66,14 @@ public class InkStory : MonoBehaviour {
 	}	
     }
 
+    private void UpdateInventory() {
+	InkList itemNames = new InkList("all_items", this.story);
+	foreach (Transform child in this.player.inventory.transform) {
+	    itemNames.AddItem(child.gameObject.name);
+	}
+	this.story.variablesState["player_inventory"] = itemNames;	
+    }
+    
     private void ContinueAndRefreshView() {
 	// exit out at end of dialogue
 	if (!this.story.canContinue) {
@@ -73,10 +82,22 @@ public class InkStory : MonoBehaviour {
 	    return;
 	}
 	
+	this.UpdateInventory();	
 	this.story.Continue();
+	this.ProcessTags();
 	this.RefreshView(0);
     }
 
+    private void ProcessTags() {
+	for (int i = 0; i < story.currentTags.Count; i++) {
+	    string tag = story.currentTags[i].Trim();
+
+	    // give item
+	    if (tag.StartsWith("give_")) {
+		Debug.Log("give!");
+	    }
+	}
+    }
     
     private void ClearView() {
 	foreach (Transform child in this.canvas.transform) {
