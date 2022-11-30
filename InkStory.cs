@@ -17,13 +17,15 @@ public class InkStory : MonoBehaviour {
     // related objects
     public Player player;
     public Canvas canvas;
+    public Dialogue currentDialogue;
     
     public void Start() {
 	this.story = new Story(inkJSONAsset.text);
     }
 
-    public void OpenStory(string startingKnot) {
-	this.story.ChoosePathString(startingKnot);
+    public void OpenStory(Dialogue currentDialogue) {
+	this.currentDialogue = currentDialogue;
+	this.story.ChoosePathString(this.currentDialogue.startingKnot);
 	this.ContinueAndRefreshView();
     }
 
@@ -71,7 +73,13 @@ public class InkStory : MonoBehaviour {
 	foreach (Transform child in this.player.inventory.transform) {
 	    itemNames.AddItem(child.gameObject.name);
 	}
-	this.story.variablesState["player_inventory"] = itemNames;	
+	this.story.variablesState["player_inventory"] = itemNames;
+
+	itemNames = new InkList("all_items", this.story);
+	foreach (Transform child in this.currentDialogue.transform) {
+	    itemNames.AddItem(child.gameObject.name);
+	}
+	this.story.variablesState["dialogue_inventory"] = itemNames;
     }
     
     private void ContinueAndRefreshView() {
@@ -94,7 +102,26 @@ public class InkStory : MonoBehaviour {
 
 	    // give item
 	    if (tag.StartsWith("give_")) {
-		Debug.Log("give!");
+		string itemName = tag.Substring(5);
+		foreach (Transform child in this.currentDialogue.transform) {
+		    if (child.gameObject.name == itemName) {
+			InventoryItem inventoryItem = child.GetComponent<InventoryItem>();
+			inventoryItem.markedForDrop = true;
+			inventoryItem.dropPosition = this.player.transform.position;
+			break;
+		    }
+		}
+	    }
+	    
+	    // take item
+	    if (tag.StartsWith("take_")) {
+		string itemName = tag.Substring(5);
+		foreach (Transform child in this.player.inventory.transform) {
+		    if (child.gameObject.name == itemName) {
+			child.transform.SetParent(this.currentDialogue.transform, false);
+			break;
+		    }
+		}	
 	    }
 	}
     }

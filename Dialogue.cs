@@ -20,6 +20,6 @@ public class Dialogue : Hittable
     public override void GetHit(Player player) {
 	player.isInDialogue = true;
 	player.choiceIndex = 0;
-	this.story.OpenStory(this.startingKnot);
+	this.story.OpenStory(this);
     }
 }
