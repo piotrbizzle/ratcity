@@ -3,14 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Zone : MonoBehaviour
-{
-    // configurables
-    public Node TopLeftCornerNode;
-    public Node BottomRightCornerNode;
-    
-    public bool containsPlayer;    
-    private Vector3 topLeftCorner;
-    private Vector3 bottomRightCorner;
+{    
+    public bool containsPlayer;
+    public Vector3 topLeftCorner;
+    public Vector3 bottomRightCorner;
 
     // related objects
     public Player player;
@@ -20,11 +16,13 @@ public class Zone : MonoBehaviour
 	this.player = GameObject.Find("/player").GetComponent<Player>();
 
 	// get corner coordinates, then delete nodes
-	this.topLeftCorner = TopLeftCornerNode.transform.position;
-	this.bottomRightCorner = BottomRightCornerNode.transform.position;
+	Transform topLeftNode = this.transform.Find("TopLeft");
+	Transform bottomRightNode = this.transform.Find("BottomRight");
+	this.topLeftCorner = topLeftNode.position;
+	this.bottomRightCorner = bottomRightNode.position;
 
-	GameObject.Destroy(TopLeftCornerNode.gameObject);
-	GameObject.Destroy(BottomRightCornerNode.gameObject);
+	GameObject.Destroy(topLeftNode.gameObject);
+	GameObject.Destroy(bottomRightNode.gameObject);
     }
 
     public virtual void Update() {
@@ -34,7 +32,6 @@ public class Zone : MonoBehaviour
 	    this.OnPlayerExit();
 	} else if (!this.containsPlayer && currentlyContainsPlayer) {
 	    this.containsPlayer = true;
-	    this.player.mostRecentZone = this;
 	    this.OnPlayerEnter();
 	}
     }

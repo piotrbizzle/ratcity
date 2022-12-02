@@ -5,7 +5,6 @@ using UnityEngine;
 public class PickUpable : Hittable
 {
     // nomenclature: PickUpables become "items" when they are picked up
-
     public override void Start() {
 	base.Start();
 	this.GetComponent<BoxCollider2D>().isTrigger = true;

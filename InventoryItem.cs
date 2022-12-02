@@ -3,24 +3,34 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class InventoryItem : MonoBehaviour {
-    public Sprite pickUpableSprite;
-    
+    // configurables
+    public Sprite pickUpableSprite;    
     public Sprite itemSprite;
     public string itemShapeName;
-
-    // TODO: infer from shape
-    public int width; 
-    public int height;
     
     // positioning in menu
+    public int width; 
+    public int height;
     public int x;
-    public int y;
+    public int y;    
     public int rotation; // 0, 1, 2, 3 -> 0, 90, 180, 270
     public bool isSelected;
     public bool isOutOfBounds;
     public bool markedForDrop;
     public Vector3 dropPosition;
 
+    // related objects
+    public Player player;
+
+    public void Start() {
+	bool[][] itemShape = InventoryItem.ItemShapes[this.itemShapeName];
+	this.height = itemShape.Length;
+	this.width = itemShape[0].Length;
+
+	// get player
+	this.player = GameObject.Find("/player").GetComponent<Player>();
+    }
+    
     public void Update() {
 	if (this.markedForDrop) {
 	    this.BecomePickUpable(this.dropPosition);
@@ -34,7 +44,7 @@ public class InventoryItem : MonoBehaviour {
 	pickUpableGo.AddComponent<PickUpable>();
 	pickUpableGo.transform.position = dropPosition;
 
-	// TODO: what about zones?
+	pickUpableGo.transform.SetParent(this.player.mostRecentZone.transform);
 	
 	this.transform.SetParent(pickUpableGo.transform, false);
 	this.markedForDrop = false;

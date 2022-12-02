@@ -18,6 +18,8 @@ public class InkStory : MonoBehaviour {
     public Player player;
     public Canvas canvas;
     public Dialogue currentDialogue;
+
+    public int choiceIndex;
     
     public void Start() {
 	this.story = new Story(inkJSONAsset.text);
@@ -26,9 +28,31 @@ public class InkStory : MonoBehaviour {
     public void OpenStory(Dialogue currentDialogue) {
 	this.currentDialogue = currentDialogue;
 	this.story.ChoosePathString(this.currentDialogue.startingKnot);
+	this.choiceIndex = 0;
 	this.ContinueAndRefreshView();
     }
 
+    public void ControlMenu() {
+    	// get inputs
+	bool up = Input.GetKeyDown("w");
+	bool down = Input.GetKeyDown("s");
+	bool choose = Input.GetKeyDown("j");
+
+	if (choose) {
+	    this.Choose(this.choiceIndex);
+	    this.choiceIndex = 0;
+	    return;
+	}
+
+	if (up && !down && this.choiceIndex > 0) {
+	    this.choiceIndex -= 1;
+	    this.RefreshView(this.choiceIndex);
+	} else if (down && !up && this.choiceIndex < this.story.currentChoices.Count - 1) {
+	    this.choiceIndex += 1;
+	    this.RefreshView(this.choiceIndex);
+	}
+    }
+	
     public void Choose(int choiceIndex) {
 	this.story.ChooseChoiceIndex(choiceIndex);
 
@@ -122,6 +146,16 @@ public class InkStory : MonoBehaviour {
 			break;
 		    }
 		}	
+	    }
+
+	    // grant dark vision
+	    if (tag == "grant_darkVision") {
+		this.player.hasDarkVision = true;
+	    }
+
+	    // grant zipline
+	    if (tag == "grant_zipline") {
+		this.player.hasZipline = true;
 	    }
 	}
     }

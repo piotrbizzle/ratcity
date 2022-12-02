@@ -9,35 +9,73 @@ VAR dialogue_inventory = ()
 == function dialogue_has(item) ==
 ~ return dialogue_inventory has item
 
+== other_gross_guy ==
+- "I may look like a Gross Guy but I know some good tips!"
++ "What is the secret knock?"
+  -> secret_knock
++ "How can I see in the dark?"
+  -> see_in_the_dark
++ \(Walk away\)
+    -> END
+  
+== secret_knock ==
+- "The secret knock is: knock, knock... knock!"
++ "Thanks, pal!"
+    -> END
+
+== see_in_the_dark ==
+- "I can teach you to see in the dark, but you better bring me a Pink Item!"
++ {player_has(DummyItem3)} "I've got it right here, boss!"
+    -> dark_vision
++ "Let me seeeee..."
+  -> END
+
+== dark_vision ==
+- \(The Gross Guy licks each of your eyeballs. You feel like you can see in the dark now!\) # take_DummyItem3 # grant_darkVision
++ "Uhhhhh thanks I think"
+  -> END
+
 == gross_guy ==
-- "You made it to the end! Great job!" # give_test
-+ "Thank you"
-    -> thanks
-+ "You are too gross."
-    -> gross
-+ {player_has(DummyItem1)} "Have this dummy item!"
+- "I'll give you a Pink Item in exchange for a Green one, but I reaaaally want a Blue Item!"
++ {player_has(DummyItem2) && dialogue_has(DummyItem3)} "Let's trade!"
+    -> trade
++ {player_has(DummyItem3) && dialogue_has(DummyItem2)} "Let's trade back"
+    -> trade_back
++ {dialogue_has(DummyItem2)} \(Steal your Green Item back\)
     -> steal
-+ {dialogue_has(DummyItem1)} "Can i have my dummy item back?"
-    -> give_back
++ {player_has(DummyItem1)} "I have that Blue Item you wanted!"
+    -> win
 + \(Walk away\)
     -> END
     
-== thanks ==
-- "No Problem!"
+== trade ==
+- "Nice doing business with you!" # take_DummyItem2 # give_DummyItem3
 + \(Leave Him\)
     -> END
     
-== gross ==
-- "How cruel!"
+== trade_back ==
+"Okay, let's trade back!" # take_DummyItem3 # give_DummyItem2
 + \(Leave Him\)
     -> END
     
 == steal ==
-"YOINK!" # take_DummyItem1
+- \(He doesn't suspect a thing\) # give_DummyItem2
 + \(Leave Him\)
     -> END
 
-== give_back ==
-"Fine here" # give_DummyItem1
+== win ==
+"That's perfect! You're the winner!" # take_DummyItem1
 + \(Leave Him\)
+    -> END
+    
+== gross_guy_3 == 
+- "Wanna learn to zipline?"
++ "Sure"
+    -> zipline
++ \(Leave Him\)
+    -> END
+    
+== zipline ==
+- "Just jump up to that red dot while scurrying!" # grant_zipline
++ \(You feel like you can zipline now\)
     -> END

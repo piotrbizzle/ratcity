@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class LoadingZone : Zone
 {
-    // Start is called before the first frame update
     public override void Start() {
 	base.Start();
 	this.SetActive(this.containsPlayer);	    

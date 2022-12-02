@@ -4,12 +4,17 @@ using UnityEngine;
 
 public class Platform : MonoBehaviour
 {
-    public float width = 3;
-    public float height = 0.5f;
+    public float width;
+    public float height;
     
     // Start is called before the first frame update
     void Start()
     {
+	// get dimensions
+	this.width = this.GetComponent<SpriteRenderer>().sprite.rect.width / 100;
+	this.height = this.GetComponent<SpriteRenderer>().sprite.rect.height / 100;
+									     
+	
 	// collision
         this.gameObject.AddComponent<BoxCollider2D>();
 

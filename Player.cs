@@ -47,7 +47,6 @@ public class Player : MonoBehaviour
 
     // dialogue
     public bool isInDialogue;
-    public int choiceIndex;
 
     // inventory
     public bool isInInventory;    
@@ -57,11 +56,17 @@ public class Player : MonoBehaviour
     // 2, 3 - scurry right / left
     public Sprite[] frames;
 
+    // unlocks
+    public bool hasDarkVision;
+    public bool hasZipline;
+
     // related objects
     public PlayerFist fist;
     public InkStory inkStory;
     public InventoryScreen inventory;
     public Zone mostRecentZone;
+    public SpriteRenderer darkVision;
+    public SpriteRenderer noVision;
     
     // Start is called before the first frame update
     void Start()
@@ -83,33 +88,12 @@ public class Player : MonoBehaviour
 	if (this.isInInventory) {
 	    this.isInInventory = this.inventory.ControlMenu();
 	} else if (this.isInDialogue) {
-	    this.DialogueMenu();
+	    this.inkStory.ControlMenu();
 	} else {
 	    this.MovePlayer();
 	    this.ActionPlayer();
 	}
 	this.AnimatePlayer();
-    }
-
-    private void DialogueMenu() {
-	// get inputs
-	bool up = Input.GetKeyDown("w");
-	bool down = Input.GetKeyDown("s");
-	bool choose = Input.GetKeyDown("j");
-
-	if (choose) {
-	    this.inkStory.Choose(this.choiceIndex);
-	    this.choiceIndex = 0;
-	    return;
-	}
-
-	if (up && !down && this.choiceIndex > 0) {
-	    this.choiceIndex -= 1;
-	    this.inkStory.RefreshView(this.choiceIndex);
-	} else if (down && !up && this.choiceIndex < this.inkStory.story.currentChoices.Count - 1) {
-	    this.choiceIndex += 1;
-	    this.inkStory.RefreshView(this.choiceIndex);
-	}
     }
 
     private void MovePlayer() {
@@ -308,6 +292,11 @@ public class Player : MonoBehaviour
 	ClimbingNode collidedClimbingNode = collider.gameObject.GetComponent<ClimbingNode>();
 	if (collidedClimbingNode != null) {
 	    if (collidedClimbingNode.isGrabbable && this.isScurrying && !this.isClimbing) {
+		// only zipline if it's unlocked
+		if (collidedClimbingNode.isZipline && !this.hasZipline) {
+		    return;
+		}
+
 		// grab onto end node
 		this.isClimbing = true;
 		this.isZiplining = collidedClimbingNode.isZipline;
