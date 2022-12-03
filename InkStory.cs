@@ -157,6 +157,13 @@ public class InkStory : MonoBehaviour {
 	    if (tag == "grant_zipline") {
 		this.player.hasZipline = true;
 	    }
+
+	    // upgrade inventory
+	    if (tag == "upgrade_inventory") {
+		this.player.inventory.inventoryBackgroundPrefab = this.player.inventory.bigInventoryBackgroundPrefab;
+		this.player.inventory.inventoryWidth = 6;
+		this.player.inventory.inventoryHeight = 4;
+	    }		
 	}
     }
     

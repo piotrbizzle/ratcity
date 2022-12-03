@@ -8,12 +8,12 @@ public class InventoryScreen : MonoBehaviour
     public int cursorX;
     public int cursorY;
 
-    // TODO: make upgradable
-    private int inventoryWidth = 5;
-    private int inventoryHeight = 3;
+    public int inventoryWidth = 5;
+    public int inventoryHeight = 3;
 
     // UI prefabs
-    public Image inventoryBackgroundPrefab;    
+    public Image inventoryBackgroundPrefab;
+    public Image bigInventoryBackgroundPrefab;
     public Image itemImagePrefab;
     public Image cursorPrefab;
     
