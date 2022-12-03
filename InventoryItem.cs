@@ -7,6 +7,8 @@ public class InventoryItem : MonoBehaviour {
     public Sprite pickUpableSprite;    
     public Sprite itemSprite;
     public string itemShapeName;
+    public bool isExplosive;
+    public bool isRope;
     
     // positioning in menu
     public int width; 

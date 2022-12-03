@@ -292,8 +292,8 @@ public class Player : MonoBehaviour
 	ClimbingNode collidedClimbingNode = collider.gameObject.GetComponent<ClimbingNode>();
 	if (collidedClimbingNode != null) {
 	    if (collidedClimbingNode.isGrabbable && this.isScurrying && !this.isClimbing) {
-		// only zipline if it's unlocked
-		if (collidedClimbingNode.isZipline && !this.hasZipline) {
+		// only zipline if it's activated and ability is unlocked
+		if (collidedClimbingNode.isZipline && (!this.hasZipline || !collidedClimbingNode.isActivated)) {
 		    return;
 		}
 
