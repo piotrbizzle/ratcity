@@ -79,3 +79,8 @@ VAR dialogue_inventory = ()
 - "Just jump up to that red dot while scurrying!" # grant_zipline
 + \(You feel like you can zipline now\)
     -> END
+
+== description ==
+- "It's like... a weird angry oval?"
++ \(Look away\)
+    -> END

@@ -271,6 +271,15 @@ public class Player : MonoBehaviour
         // Ontriggerstay2d called when this collides with another BoxCollider2D w/ isTrigger=true
     void OnTriggerStay2D(Collider2D collider)
     {
+	// descriptions
+	Description collidedDescription = collider.gameObject.GetComponent<Description>();
+	if (collidedDescription != null) {
+	    collidedDescription.isHighlighted = 5; // TODO: put this in a constant
+	    if (Input.GetKey("k")) {
+		collidedDescription.OpenDescription(this);
+	    }
+	}
+	
 	// platform triggers
 	JumpTrigger collidedJumpTrigger = collider.gameObject.GetComponent<JumpTrigger>();
 	if (collidedJumpTrigger != null && this.yMomentum <= 0) {

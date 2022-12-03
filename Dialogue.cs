@@ -18,6 +18,10 @@ public class Dialogue : Hittable
     }
     
     public override void GetHit(Player player) {
+	this.OpenDialogue(player);
+    }
+
+    public void OpenDialogue(Player player) {
 	player.isInDialogue = true;	
 	this.story.OpenStory(this);
     }
