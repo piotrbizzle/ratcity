@@ -11,7 +11,11 @@ public class PickUpable : Hittable
     }
     
     public override void GetHit(Player player) {
+	if (!player.mayAccessInventory) {
+	    return;
+	}
 	player.isInInventory = true;
+
 	// assumes inventory item is child
 	player.inventory.OpenInventory(this.transform.GetChild(0).GetComponent<InventoryItem>());
 	GameObject.Destroy(this.gameObject);

@@ -45,6 +45,8 @@ public class Player : MonoBehaviour
     private bool facingRight;
     public bool forcedToScurry;
 
+    public bool mayAccessInventory = true;
+
     // dialogue
     public bool isInDialogue;
 
@@ -59,6 +61,9 @@ public class Player : MonoBehaviour
     // unlocks
     public bool hasDarkVision;
     public bool hasZipline;
+    public bool hasAntiMetalDetector;
+    public bool hasBootlegger;
+    public bool hasArchitect;
 
     // related objects
     public PlayerFist fist;
@@ -168,7 +173,7 @@ public class Player : MonoBehaviour
 	bool hit = Input.GetKeyDown("j");
 	bool openInventory = Input.GetKeyDown("i");
 
-	if (openInventory) {
+	if (openInventory && this.mayAccessInventory) {
 	    this.isInInventory = true;
 	    this.inventory.OpenInventory(null);
 	}

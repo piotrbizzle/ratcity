@@ -158,6 +158,21 @@ public class InkStory : MonoBehaviour {
 		this.player.hasZipline = true;
 	    }
 
+	    // grant anti metal detector
+	    if (tag == "grant_antiMetalDetector") {
+		this.player.hasAntiMetalDetector = true;
+	    }
+
+	    // grant architect
+	    if (tag == "grant_architect") {
+		this.player.hasArchitect = true;
+	    }
+
+	    // grant bootlegger
+	    if (tag == "grant_bootlegger") {
+		this.player.hasBootlegger = true;
+	    }
+
 	    // upgrade inventory
 	    if (tag == "upgrade_inventory") {
 		this.player.inventory.inventoryBackgroundPrefab = this.player.inventory.bigInventoryBackgroundPrefab;

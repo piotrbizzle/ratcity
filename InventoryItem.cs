@@ -9,6 +9,7 @@ public class InventoryItem : MonoBehaviour {
     public string itemShapeName;
     public bool isExplosive;
     public bool isRope;
+    public bool isMetal;
     
     // positioning in menu
     public int width; 
@@ -46,7 +47,8 @@ public class InventoryItem : MonoBehaviour {
 	pickUpableGo.AddComponent<PickUpable>();
 	pickUpableGo.transform.position = dropPosition;
 
-	pickUpableGo.transform.SetParent(this.player.mostRecentZone.transform);
+	// most recent zone doesn't work, no zones for now!
+	// pickUpableGo.transform.SetParent(this.player.mostRecentZone.transform);
 	
 	this.transform.SetParent(pickUpableGo.transform, false);
 	this.markedForDrop = false;

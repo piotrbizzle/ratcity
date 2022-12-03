@@ -45,15 +45,22 @@ VAR dialogue_inventory = ()
     -> steal
 + {player_has(DummyItem1)} "I have that Blue Item you wanted!"
     -> win
-+ Make your invenyoru biggrt?
-    -> upgrade_inventory
++ Make you bootlegger?
+    -> make_bootlegger
++ Make you an architect?
+    -> make_architect
 + \(Walk away\)
     -> END
     
-== upgrade_inventory ==
-- "here you go!" # upgrade_inventory
+== make_bootlegger ==
+- "here you go!" # grant_bootlegger
 + Kewl~
     -> END
+    
+== make_architect ==
+- "here you go!" # grant_architect
++ Kewl~
+    -> END    
     
 == trade ==
 - "Nice doing business with you!" # take_DummyItem2 # give_DummyItem3
