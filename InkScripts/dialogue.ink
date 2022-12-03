@@ -9,6 +9,8 @@ VAR dialogue_inventory = ()
 == function dialogue_has(item) ==
 ~ return dialogue_inventory has item
 
+// character dialogues
+
 == other_gross_guy ==
 - "I may look like a Gross Guy but I know some good tips!"
 + "What is the secret knock?"
@@ -45,28 +47,8 @@ VAR dialogue_inventory = ()
     -> steal
 + {player_has(DummyItem1)} "I have that Blue Item you wanted!"
     -> win
-+ Make you bootlegger?
-    -> make_bootlegger
-+ Make you an architect?
-    -> make_architect
 + \(Walk away\)
     -> END
-    
-== make_bootlegger ==
-- "here you go!" # grant_bootlegger
-+ Kewl~
-    -> END
-    
-    
-== item_desc ==
-- Yep, it's a thing
-+ Okay
-    -> END
-
-== make_architect ==
-- "here you go!" # grant_architect
-+ Kewl~
-    -> END    
     
 == trade ==
 - "Nice doing business with you!" # take_DummyItem2 # give_DummyItem3
@@ -84,10 +66,15 @@ VAR dialogue_inventory = ()
     -> END
 
 == win ==
-"That's perfect! You're the winner!" # take_DummyItem1
+- "There's a secret passage at the back of the cave that you should be able to see now! My EXPLOSIVE Green Item should open it up" # take_DummyItem1 # grant_architect
 + \(Leave Him\)
     -> END
     
+== winner ==
+- "You found me! The secret blue guy!
++ "Alright!"
+    -> END
+   
 == gross_guy_3 == 
 - "Wanna learn to zipline?"
 + "Sure"
@@ -99,8 +86,9 @@ VAR dialogue_inventory = ()
 - "Just jump up to that red dot while scurrying!" # grant_zipline
 + \(You feel like you can zipline now\)
     -> END
-
-== description ==
-- "It's like... a weird angry oval?"
-+ \(Look away\)
+    
+// item descriptions
+== item_desc ==
+- Yep, it's a thing
++ Okay
     -> END

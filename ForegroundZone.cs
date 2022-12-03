@@ -5,13 +5,13 @@ using UnityEngine;
 public class ForegroundZone : Zone
 {
     // configurables
-    private float MaxTransitionTime = .2f;
     public bool requiresArchitect;
     public bool requiresBootlegger;
     
     // counters
-    public float currentFadeInTime;
-    public float currentFadeOutTime;
+    private float MaxTransitionTime = .2f;
+    private float currentFadeInTime;
+    private float currentFadeOutTime;
     
     public override void Update() {
 	base.Update();
