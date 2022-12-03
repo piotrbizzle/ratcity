@@ -2,12 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PickUpable : Hittable
+public class PickUpable : Description
 {
     // nomenclature: PickUpables become "items" when they are picked up
     public override void Start() {
 	base.Start();
-	this.GetComponent<BoxCollider2D>().isTrigger = true;
+
+	// init from child inventory item
+	InventoryItem inventoryItem = this.transform.GetChild(0).GetComponent<InventoryItem>();
+	
+	this.GetComponent<SpriteRenderer>().sprite = inventoryItem.pickUpableSprite;
+	this.GetComponent<SpriteRenderer>().sortingLayerName = "Items";
+	this.startingKnot = inventoryItem.pickUpableStartingKnot;
     }
     
     public override void GetHit(Player player) {

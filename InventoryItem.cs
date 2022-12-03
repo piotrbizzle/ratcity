@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class InventoryItem : MonoBehaviour {
     // configurables
-    public Sprite pickUpableSprite;    
+    public Sprite pickUpableSprite;
+    public string pickUpableStartingKnot;
     public Sprite itemSprite;
     public string itemShapeName;
     public bool isExplosive;
@@ -42,15 +43,15 @@ public class InventoryItem : MonoBehaviour {
     
     public void BecomePickUpable(Vector3 dropPosition) {
 	GameObject pickUpableGo = new GameObject();
+	this.transform.SetParent(pickUpableGo.transform, false);
+	
 	pickUpableGo.AddComponent<SpriteRenderer>().sprite = this.pickUpableSprite;
 	pickUpableGo.GetComponent<SpriteRenderer>().sortingLayerName = "Items";
-	pickUpableGo.AddComponent<PickUpable>();
+	pickUpableGo.AddComponent<PickUpable>().startingKnot = this.pickUpableStartingKnot;
 	pickUpableGo.transform.position = dropPosition;
 
-	// most recent zone doesn't work, no zones for now!
-	// pickUpableGo.transform.SetParent(this.player.mostRecentZone.transform);
+	// TODO: zones?
 	
-	this.transform.SetParent(pickUpableGo.transform, false);
 	this.markedForDrop = false;
     }    
     

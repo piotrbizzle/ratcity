@@ -51,6 +51,16 @@ public class MetalDetectorZone : Zone
 
     public override void OnPlayerExit() {
 	this.player.mayAccessInventory = true;
+
+	// exit early if player has anything metal
+	if (!this.player.hasAntiMetalDetector) {	    
+	    foreach (Transform child in this.player.inventory.transform) {
+		InventoryItem inventoryItem = child.GetComponent<InventoryItem>();
+		if (inventoryItem.isMetal) {
+		    return;
+		}
+	    }
+	}
 	this.currentFadeInTime = this.MaxTransitionTime;
 	this.currentFadeOutTime = 0;
     }

@@ -57,6 +57,12 @@ VAR dialogue_inventory = ()
 + Kewl~
     -> END
     
+    
+== item_desc ==
+- Yep, it's a thing
++ Okay
+    -> END
+
 == make_architect ==
 - "here you go!" # grant_architect
 + Kewl~
