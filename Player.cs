@@ -47,6 +47,8 @@ public class Player : MonoBehaviour
 
     public bool mayAccessInventory = true;
 
+    private Vector3 resetPosition;
+
     // dialogue
     public bool isInDialogue;
 
@@ -86,6 +88,8 @@ public class Player : MonoBehaviour
 	rb.constraints = RigidbodyConstraints2D.FreezeRotation;
 	rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
 	rb.sleepMode = RigidbodySleepMode2D.NeverSleep;
+
+	this.resetPosition = this.transform.position;
     }
 
     // Update is called once per frame
@@ -109,7 +113,15 @@ public class Player : MonoBehaviour
 	bool right = Input.GetKey("d");
 	bool scurry = Input.GetKey("s");
 	bool jump = Input.GetKey("space");
+	bool reset = Input.GetKeyDown("r");
 
+	// reset position if needed
+	if (reset && !this.isClimbing) {
+	    this.transform.position = this.resetPosition;
+	    this.xMomentum = 0;
+	    this.yMomentum = 0;
+	}
+	
 	// decide whether to be solid or not
 	this.GetComponent<BoxCollider2D>().enabled = !this.isClimbing;
 
