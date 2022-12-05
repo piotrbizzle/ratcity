@@ -61,6 +61,8 @@ public class Player : MonoBehaviour
     // unlocks
     public bool hasDarkVision;
     public bool hasZipline;
+    public bool hasClimb;
+    public bool hasZiplineClimb;
     public bool hasAntiMetalDetector;
     public bool hasBootlegger;
     public bool hasArchitect;
@@ -308,6 +310,11 @@ public class Player : MonoBehaviour
 	    if (collidedClimbingNode.isGrabbable && this.isScurrying && !this.isClimbing) {
 		// only zipline if it's activated and ability is unlocked
 		if (collidedClimbingNode.isZipline && (!this.hasZipline || !collidedClimbingNode.isActivated)) {
+		    return;
+		}
+
+		// only climb if ability is unlocked
+		if (!collidedClimbingNode.isZipline && !this.hasClimb) {
 		    return;
 		}
 

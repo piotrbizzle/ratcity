@@ -165,6 +165,11 @@ public class InkStory : MonoBehaviour {
 		this.player.hasZipline = true;
 	    }
 
+	    // grant zipline
+	    if (tag == "grant_climb") {
+		this.player.hasClimb = true;
+	    }
+	    
 	    // grant anti metal detector
 	    if (tag == "grant_antiMetalDetector") {
 		this.player.hasAntiMetalDetector = true;
