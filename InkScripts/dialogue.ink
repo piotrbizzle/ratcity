@@ -1,5 +1,5 @@
 // inventory stuff
-LIST all_items = DummyItem1, DummyItem2, DummyItem3
+LIST all_items = luckyCoin
 VAR player_inventory = ()
 VAR dialogue_inventory = ()
 

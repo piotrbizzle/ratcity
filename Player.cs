@@ -151,6 +151,10 @@ public class Player : MonoBehaviour
 		this.jumpBoostSeconds = 0;
 	    }	    
 	}
+	
+	if (!Input.GetKey("space")) {
+	    this.jumpBoostSeconds = 0;
+	}
 
 	if (this.onGroundSeconds <= 0 && this.jumpBoostSeconds <= 0) {
 	    if (this.yMomentum > -1 * this.GravityMaxSpeed) {
