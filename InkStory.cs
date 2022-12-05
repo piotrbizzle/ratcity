@@ -116,11 +116,14 @@ public class InkStory : MonoBehaviour {
 	
 	this.UpdateInventory();	
 	this.story.Continue();
-	this.ProcessTags();
+	if (this.ProcessTags()) {
+	    return;
+	}
 	this.RefreshView(0);
     }
 
-    private void ProcessTags() {
+    private bool ProcessTags() {
+	// returns true if should exit early
 	for (int i = 0; i < story.currentTags.Count; i++) {
 	    string tag = story.currentTags[i].Trim();
 
@@ -130,9 +133,13 @@ public class InkStory : MonoBehaviour {
 		foreach (Transform child in this.currentDialogue.transform) {
 		    if (child.gameObject.name == itemName) {
 			InventoryItem inventoryItem = child.GetComponent<InventoryItem>();
-			inventoryItem.markedForDrop = true;
-			inventoryItem.dropPosition = this.player.transform.position;
-			break;
+			// inventoryItem.markedForDrop = true;
+			// inventoryItem.dropPosition = this.player.transform.position;
+			// open player inventory immediately
+			this.player.isInDialogue = false;
+			this.player.isInInventory = true;
+			player.inventory.OpenInventory(inventoryItem);
+			return true;
 		    }
 		}
 	    }
@@ -178,8 +185,9 @@ public class InkStory : MonoBehaviour {
 		this.player.inventory.inventoryBackgroundPrefab = this.player.inventory.bigInventoryBackgroundPrefab;
 		this.player.inventory.inventoryWidth = 6;
 		this.player.inventory.inventoryHeight = 4;
-	    }		
+	    }
 	}
+	return false;
     }
     
     private void ClearView() {

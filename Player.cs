@@ -8,25 +8,25 @@ public class Player : MonoBehaviour
     private float SCURRYHEIGHTDELTA = 0.38f;
     
     // configurables
-    public float WalkDrag = 40;
-    public float WalkAcceleration = 40;
-    public float WalkMaxSpeed = 8;    
-    public float WalkJumpBoostPower = 18;
+    private float WalkDrag = 40;
+    private float WalkAcceleration = 40;
+    private float WalkMaxSpeed = 8;    
+    private float WalkJumpBoostPower = 18;
     
-    public float ScurryDrag = 40;
-    public float ScurryAcceleration = 40;
-    public float ScurryMaxSpeed = 12;
-    public float ScurryJumpBoostPower = 4;
+    private float ScurryDrag = 50;
+    private float ScurryAcceleration = 50;
+    private float ScurryMaxSpeed = 14;
+    private float ScurryJumpBoostPower = 12;
     
-    public float ClimbingSpeed = 8;
-    public float ZiplineSpeed = 16;
+    private float ClimbingSpeed = 8;
+    private float ZiplineSpeed = 16;
 
-    public float GravityAcceleration = 4;
-    public float GravityMaxSpeed = 12;
+    private float GravityAcceleration = 4;
+    private float GravityMaxSpeed = 12;
 
-    public float MaxOnGroundSeconds = 0.1f;
-    public float MaxJumpBoostSeconds = 0.2f;
-    public int MaxJumps = 1;
+    private float MaxOnGroundSeconds = 0.1f;
+    private float MaxJumpBoostSeconds = 0.2f;
+    private int MaxJumps = 1;
     
     // movement
     private float xMomentum;
@@ -51,7 +51,7 @@ public class Player : MonoBehaviour
     public bool isInDialogue;
 
     // inventory
-    public bool isInInventory;    
+    public bool isInInventory;
     
     // animation
     // 0, 1 - walk right / left
@@ -248,7 +248,7 @@ public class Player : MonoBehaviour
 	// scurry jump also boost forward
 	if (this.isScurrying) {
 	    this.xMomentum += (this.facingRight ? -1 : 1) * jumpBoost;
-	}       
+	} 
     }
 
 

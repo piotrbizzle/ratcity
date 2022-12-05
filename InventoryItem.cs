@@ -59,6 +59,42 @@ public class InventoryItem : MonoBehaviour {
     // NB: items are mirrored vertically
     //     (i know, i know, but it's cleaner to not flip everything in code...)
     public static Dictionary<string, bool[][]> ItemShapes = new Dictionary<string, bool[][]>(){
+	{"1x1", new bool[][] {
+		new bool[] {true},
+	    }
+	},
+	{"1x2", new bool[][] {
+		new bool[] {true},
+		new bool[] {true},
+	    }
+	},
+	{"2x1", new bool[][] {
+		new bool[] {true, true},
+	    }
+	},
+	{"2x2", new bool[][] {
+		new bool[] {true, true},
+		new bool[] {true, true},
+	    }
+	},
+	{"1x3", new bool[][] {
+		new bool[] {true, true, true},
+	    }
+	},
+	{"2x3", new bool[][] {
+		new bool[] {true, true},
+		new bool[] {true, true},
+		new bool[] {true, true},
+	    }
+	},
+	{"4x5", new bool[][] {
+		new bool[] {true, true, true, true},
+		new bool[] {true, true, true, true},
+		new bool[] {true, true, true, true},
+		new bool[] {true, true, true, true},
+		new bool[] {true, true, true, true},
+	    }
+	},
 	{"DummyShape", new bool[][] {
 		new bool[] {true, false},
 		new bool[] {true, false},
