@@ -318,6 +318,16 @@ public class Player : MonoBehaviour
 		this.transform.position = new Vector3(this.transform.position.x, parentPlatform.transform.position.y + 0.5f * parentPlatform.height + (this.isScurrying ? 0.36f : 0.5f), 0);
 		this.jumpsRemaining = this.MaxJumps;
 	    }
+	    
+	    // move player with elevator if needed
+	    Elevator elevator = collidedJumpTrigger.transform.parent.GetComponent<Elevator>();
+	    if (elevator != null && elevator.currentFloorDelay <= 0) {
+		if (elevator.goingDown) {
+		    this.transform.position -= new Vector3(0, elevator.speed * Time.deltaTime, 0);
+		} else {
+		    this.transform.position += new Vector3(0, elevator.speed * Time.deltaTime, 0);
+		}
+	    }	    
 	}
 	
 	// climbing nodes
