@@ -10,6 +10,8 @@ public class DarkZone : Zone
     // counters
     public float currentFadeInTime;
     public float currentFadeOutTime;
+
+    public bool isFirstOrLast;
         
     // Update is called once per frame
     public override void Update()
@@ -24,24 +26,32 @@ public class DarkZone : Zone
 		this.currentFadeOutTime = 0;
 	    }
 	    this.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, this.currentFadeOutTime / this.MaxTransitionTime);
-	    visionOverlay.color = new Color(1, 1, 1, 1 - this.currentFadeOutTime / this.MaxTransitionTime);
+	    if (this.isFirstOrLast) {
+		visionOverlay.color = new Color(1, 1, 1, 1 - this.currentFadeOutTime / this.MaxTransitionTime);
+	    }
 	} else if (this.currentFadeInTime > 0) {
 	    this.currentFadeInTime -= Time.deltaTime;
 	    if (this.currentFadeInTime < 0) {
 		this.currentFadeInTime = 0;
 	    }
 	    this.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 1 - this.currentFadeInTime / this.MaxTransitionTime);
-	    visionOverlay.color = new Color(1, 1, 1, this.currentFadeInTime / this.MaxTransitionTime);
+	    if (this.isFirstOrLast) {
+		visionOverlay.color = new Color(1, 1, 1, this.currentFadeInTime / this.MaxTransitionTime);
+	    }
 	}
     }
 
     public override void OnPlayerEnter() {
 	this.currentFadeOutTime = this.MaxTransitionTime;
-	this.currentFadeInTime = 0;
+	this.currentFadeInTime = 0;	
+	this.player.darknessCount += 1;
+	this.isFirstOrLast = this.player.darknessCount == 1;
     }
 
     public override void OnPlayerExit() {
 	this.currentFadeInTime = this.MaxTransitionTime;
 	this.currentFadeOutTime = 0;
+	this.player.darknessCount -= 1;
+	this.isFirstOrLast = this.player.darknessCount == 0;
     }
 }

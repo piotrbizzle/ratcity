@@ -10,16 +10,16 @@ public class Player : MonoBehaviour
     // configurables
     private float WalkDrag = 40;
     private float WalkAcceleration = 40;
-    private float WalkMaxSpeed = 8;    
+    private float WalkMaxSpeed = 10;    
     private float WalkJumpBoostPower = 18;
     
     private float ScurryDrag = 50;
     private float ScurryAcceleration = 50;
-    private float ScurryMaxSpeed = 14;
+    private float ScurryMaxSpeed = 16;
     private float ScurryJumpBoostPower = 12;
     
     private float ClimbingSpeed = 8;
-    private float ZiplineSpeed = 16;   
+    private float ZiplineSpeed = 20;   
     
     private float GravityAcceleration = 4;
     private float GravityMaxSpeed = 14;
@@ -50,6 +50,8 @@ public class Player : MonoBehaviour
     private Vector3 resetPosition;
 
     public float ziplineSpeedMultiplier;
+
+    public int darknessCount;
     
     // dialogue
     public bool isInDialogue;
