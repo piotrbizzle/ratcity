@@ -22,7 +22,7 @@ public class Player : MonoBehaviour
     private float ZiplineSpeed = 16;   
     
     private float GravityAcceleration = 4;
-    private float GravityMaxSpeed = 12;
+    private float GravityMaxSpeed = 14;
 
     private float MaxOnGroundSeconds = 0.1f;
     private float MaxJumpBoostSeconds = 0.2f;

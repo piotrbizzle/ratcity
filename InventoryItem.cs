@@ -77,7 +77,7 @@ public class InventoryItem : MonoBehaviour {
 		new bool[] {true, true},
 	    }
 	},
-	{"1x3", new bool[][] {
+	{"3x1", new bool[][] {
 		new bool[] {true, true, true},
 	    }
 	},
@@ -93,22 +93,6 @@ public class InventoryItem : MonoBehaviour {
 		new bool[] {true, true, true, true},
 		new bool[] {true, true, true, true},
 		new bool[] {true, true, true, true},
-	    }
-	},
-	{"DummyShape", new bool[][] {
-		new bool[] {true, false},
-		new bool[] {true, false},
-		new bool[] {true, true}, 
-	    }
-	},
-	{"DummyShape2", new bool[][] {
-		new bool[] {true, true, false},
-		new bool[] {false, true, true},
-		new bool[] {false, true, false}, 
-	    }
-	},
-	{"DummyShape3", new bool[][] {
-		new bool[] {true, true, true},
 	    }
 	},
     };
