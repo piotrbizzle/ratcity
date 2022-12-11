@@ -17,16 +17,6 @@ VAR dialogue_inventory = ()
 - tutorial_1
 + okay
     -> END
- 
-== letter ==
-- letter
-+ okay
-    -> END
-    
-== out_of_order ==
-- out_of_order
-+ okay
-    -> END
 
 // item descriptions
 == lucky_coin ==

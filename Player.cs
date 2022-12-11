@@ -19,8 +19,8 @@ public class Player : MonoBehaviour
     private float ScurryJumpBoostPower = 12;
     
     private float ClimbingSpeed = 8;
-    private float ZiplineSpeed = 16;
-
+    private float ZiplineSpeed = 16;   
+    
     private float GravityAcceleration = 4;
     private float GravityMaxSpeed = 12;
 
@@ -49,6 +49,8 @@ public class Player : MonoBehaviour
 
     private Vector3 resetPosition;
 
+    public float ziplineSpeedMultiplier;
+    
     // dialogue
     public bool isInDialogue;
 
@@ -204,12 +206,12 @@ public class Player : MonoBehaviour
 	if (this.isZipliningRight) {
 	    this.facingRight = true;
 	    this.transform.rotation = Quaternion.FromToRotation(Vector3.down, this.transform.position - this.rightClimbingNode.transform.position);
-	    this.transform.Translate(Vector3.up * this.ZiplineSpeed * Time.deltaTime);
+	    this.transform.Translate(Vector3.up * this.ZiplineSpeed * this.ziplineSpeedMultiplier * Time.deltaTime);
 
 	} else {
 	    this.facingRight = false;
 	    this.transform.rotation = Quaternion.FromToRotation(Vector3.up, this.transform.position - this.leftClimbingNode.transform.position);
-	    this.transform.Translate(Vector3.down * this.ZiplineSpeed * Time.deltaTime);
+	    this.transform.Translate(Vector3.down * this.ZiplineSpeed * this.ziplineSpeedMultiplier * Time.deltaTime);
 	}
     }
 
@@ -347,6 +349,9 @@ public class Player : MonoBehaviour
 		// grab onto end node
 		this.isClimbing = true;
 		this.isZiplining = collidedClimbingNode.isZipline;
+		if (this.isZiplining) {
+		    this.ziplineSpeedMultiplier = collidedClimbingNode.speedMultiplier;
+		}
 		if (collidedClimbingNode.left != null) {
 		    this.leftClimbingNode = collidedClimbingNode.left;
 		    this.rightClimbingNode = collidedClimbingNode;

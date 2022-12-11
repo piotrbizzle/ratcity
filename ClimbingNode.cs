@@ -9,6 +9,7 @@ public class ClimbingNode : Hittable
     public bool isZipline;
     public LineRenderer ziplineLine;
     public bool isActivated;
+    public float speedMultiplier = 1;
     
     // grabbable nodes must have EITHER left or right    
     public ClimbingNode left;
