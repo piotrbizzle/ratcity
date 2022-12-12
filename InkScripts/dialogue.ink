@@ -13,9 +13,9 @@ VAR dialogue_inventory = ()
 == mayor_start ==
 - I'm the mayor and I did nothing wrong
 + {player_has(evidence) && player_has(recorder)} "Check out this evidence" \(secretly record what he says next\)
-    -> mayor_confess
-+ {player_has(evidence) && not player_has(recorder)} "Check out this evidence"
     -> mayor_record
++ {player_has(evidence) && not player_has(recorder)} "Check out this evidence"
+    -> mayor_confess
 + Okay
     -> END
     
@@ -54,7 +54,7 @@ VAR dialogue_inventory = ()
     -> END
     
 == architect_teach ==
-- Now you'll be able to see walls that can be destroyed with an Explosive
+- Now you'll be able to see walls that can be destroyed with an Explosive  # grant_architect
 + Okay
     -> END
     
@@ -126,8 +126,12 @@ VAR dialogue_inventory = ()
     -> END
     
 == audioEngineer_trade ==
-- Check out this portable recording device! # give_recorder # take_wire
+- Check out this portable recording device! # take_wire
 + Okay
+    -> audioEngineer_give
+    
+== audioEngineer_give ==
+- \(receive item\) # give_recorder
     -> END
 
 == wireman_start ==
@@ -138,20 +142,28 @@ VAR dialogue_inventory = ()
     -> END
     
 == wireman_trade ==
-- Nice doing business with you # take_dollar  # give_wire
+- Nice doing business with you # take_dollar
 + Okay
+    -> wireman_give
+    
+== wireman_give ==
+- \(receive item\) # give_wire
     -> END
     
 == ceo_start ==
 - I'm the rich executive.
 + {dialogue_has(ticket)} Anything I can do for you?
-    -> ceo_give
+    -> ceo_quest
 + Okay
     -> END
     
-== ceo_give ==
-- Yeah, pick up my luggage for me, would you? You'll need to use this ticket to get it from the cleaners.  # give_ticket
+== ceo_quest ==
+- Yeah, pick up my luggage for me, would you? You'll need to use this ticket to get it from the cleaners.
 + Okay
+    -> ceo_give
+    
+== ceo_give ==
+- \(receive item\) # give_ticket
     -> END
     
 == mobBoss_start ==
@@ -188,7 +200,7 @@ VAR dialogue_inventory = ()
     -> END
 
 == gambler_win ==
-- Jeez, you won! Okay, the secret knock is five knocks in a row!
+- Jeez, you won! Okay, the secret knock is five knocks in a row!  # take_dollar
 + Okay
     -> END
 

@@ -87,12 +87,11 @@ public class InventoryItem : MonoBehaviour {
 		new bool[] {true, true},
 	    }
 	},
-	{"4x5", new bool[][] {
-		new bool[] {true, true, true, true},
-		new bool[] {true, true, true, true},
-		new bool[] {true, true, true, true},
-		new bool[] {true, true, true, true},
-		new bool[] {true, true, true, true},
+	{"5x4", new bool[][] {
+		new bool[] {true, true, true, true, true},
+		new bool[] {true, true, true, true, true},
+		new bool[] {true, true, true, true, true},
+		new bool[] {true, true, true, true, true},
 	    }
 	},
     };

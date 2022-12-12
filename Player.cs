@@ -62,8 +62,11 @@ public class Player : MonoBehaviour
     // animation
     // 0, 1 - walk right / left
     // 2, 3 - scurry right / left
+    // add 4 for walk animations
     public Sprite[] frames;
-
+    private float maxBetweenFramesSeconds = .1f;
+    private float betweenFramesSeconds;
+    
     // unlocks
     public bool hasDarkVision;
     public bool hasZipline;
@@ -275,8 +278,29 @@ public class Player : MonoBehaviour
 
 
     private void AnimatePlayer() {
+	// check inputs
+	bool isMoving = Input.GetKey("a") || Input.GetKey("d");
+	bool isOnGround = this.onGroundSeconds >= 0;	
+	
 	// player frames
 	int frameNumber = (this.facingRight ? 1 : 0) + (this.isScurrying ? 2 : 0);
+	if (this.betweenFramesSeconds > 0) {
+	    this.betweenFramesSeconds -= Time.deltaTime;
+	}
+	
+	if (!isOnGround) {
+	    // use run frame in the air because it's cute
+	    frameNumber += 4; // running frame 
+	} else {
+	    // otherwise, alternate between frames if moving
+	    if (this.betweenFramesSeconds <= 0 && isMoving) {
+		this.betweenFramesSeconds += 2 * this.maxBetweenFramesSeconds;
+	    }
+	    if (this.betweenFramesSeconds > this.maxBetweenFramesSeconds) {
+		frameNumber += 4; // running frame
+	    }
+	}
+	
 	this.GetComponent<SpriteRenderer>().sprite = this.frames[frameNumber];
 
 	// relocate player fist
@@ -288,9 +312,11 @@ public class Player : MonoBehaviour
 	    }
 	} else {
 	    if (this.facingRight) {
-		this.fist.transform.localPosition = new Vector3(0.54f, 0, 0);
+		this.fist.GetComponent<SpriteRenderer>().flipX = false;
+		this.fist.transform.localPosition = new Vector3(0.42f, 0.18f, 0);
 	    } else {
-		this.fist.transform.localPosition = new Vector3(-0.54f, 0, 0);
+		this.fist.GetComponent<SpriteRenderer>().flipX = true;
+		this.fist.transform.localPosition = new Vector3(-0.42f, 0.18f, 0);
 	    }
 	}
     }

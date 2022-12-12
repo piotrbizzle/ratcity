@@ -20,6 +20,12 @@ public class ClimbingNode : Hittable
     public override void Start()
     {
 	base.Start();
+
+	// hide everything except zipline starts
+	if (!this.isZipline || !this.isGrabbable) {
+	    GameObject.Destroy(this.GetComponent<SpriteRenderer>());	    
+	}
+	this.GetComponent<SpriteRenderer>().sortingLayerName = "Scenery";
 	
 	this.gameObject.GetComponent<BoxCollider2D>().isTrigger = true;
 	if (this.isZipline && this.isGrabbable && !this.isActivated) {

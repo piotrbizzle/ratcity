@@ -13,7 +13,8 @@ public class Platform : MonoBehaviour
 	// get dimensions
 	this.width = this.GetComponent<SpriteRenderer>().sprite.rect.width / 100;
 	this.height = this.GetComponent<SpriteRenderer>().sprite.rect.height / 100;
-									     
+
+	this.GetComponent<SpriteRenderer>().sortingLayerName = "Floors";
 	
 	// collision
         this.gameObject.AddComponent<BoxCollider2D>();

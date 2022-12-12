@@ -7,6 +7,11 @@ public class Wall : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+	// if wall is not explicitly a level boundary, put it at wall level
+	if (this.GetComponent<SpriteRenderer>().sortingLayerName != "LevelBoundary" && this.GetComponent<MetalDetectorZone>() == null) {
+	    this.GetComponent<SpriteRenderer>().sortingLayerName = "Walls";
+	}
+
 	// collision
         this.gameObject.AddComponent<BoxCollider2D>();
 
