@@ -6,6 +6,7 @@ public class Dialogue : Hittable
 {
     // configurables
     public string startingKnot;
+    public Sprite portraitSprite;
 
     // related objects
     private InkStory story;

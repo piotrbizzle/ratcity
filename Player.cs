@@ -42,7 +42,7 @@ public class Player : MonoBehaviour
     private float jumpBoostSeconds;
     private int jumpsRemaining;
     
-    private bool facingRight;
+    public bool facingRight;
     public bool forcedToScurry;
 
     public bool mayAccessInventory = true;
@@ -138,6 +138,7 @@ public class Player : MonoBehaviour
 	    this.transform.Translate(Vector3.down * this.SCURRYHEIGHTDELTA);
 	    this.transform.rotation = new Quaternion(0, 0, 0, 0);
 	    this.transform.Rotate(new Vector3(0, 0, 270));
+	    this.fist.StopHitting();
 	} else if (this.isScurrying && !scurry && !this.forcedToScurry) {
 	    this.isScurrying = false;
 	    this.isClimbing = false;	    

@@ -52,6 +52,11 @@ public class PlayerFist : MonoBehaviour
 	this.SetVisible(true);
     }
 
+    public void StopHitting() {
+	this.currentHittingTime = 0;
+	this.SetVisible(false);
+    }
+
     private void SetVisible(bool isVisible) {
 	this.GetComponent<SpriteRenderer>().color = isVisible? Color.white : Color.clear;
     }

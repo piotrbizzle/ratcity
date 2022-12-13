@@ -13,7 +13,10 @@ public class InkStory : MonoBehaviour {
     public Image dialogueBoxPrefab;
     public GameObject dialogueChoiceGroupPrefab;
     public Text dialogueChoiceTextPrefab;
+    public Image playerPortraitPrefab;
 
+    public Sprite playerPortraitLeftSprite;
+    
     // related objects
     public Player player;
     public Canvas canvas;
@@ -70,6 +73,16 @@ public class InkStory : MonoBehaviour {
 	Image dialogueBox = Instantiate(this.dialogueBoxPrefab);
 	dialogueBox.transform.SetParent(this.canvas.transform, false);
 
+	// portraits
+	Image playerPortrait = Instantiate(this.playerPortraitPrefab);
+	playerPortrait.transform.SetParent(this.canvas.transform, false);
+
+	if (this.currentDialogue.portraitSprite != null) {
+	    playerPortrait.sprite = this.currentDialogue.portraitSprite;
+	} else if (!this.player.facingRight) {
+	    playerPortrait.sprite = this.playerPortraitLeftSprite;
+	}
+	
 	// dialogue group
 	GameObject dialogueTextGroup = Instantiate(this.dialogueChoiceGroupPrefab);
 	dialogueTextGroup.transform.SetParent(this.canvas.transform, false);
