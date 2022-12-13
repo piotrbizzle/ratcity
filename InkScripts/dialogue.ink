@@ -66,7 +66,7 @@ VAR dialogue_inventory = ()
     -> END
 
 == acrobat_trade ==
-- Yes! Now I can do my act. Here is the secret to ziplining!  # take_clownNose  # grant_zipline
+- Yes! Now I can do my act. Here is the secret to ziplining!  # take_clownNose  # grant_zipline # modify_sprites
 + Okay
     -> END
     

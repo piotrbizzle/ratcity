@@ -204,6 +204,12 @@ public class InkStory : MonoBehaviour {
 		this.player.inventory.inventoryWidth = 6;
 		this.player.inventory.inventoryHeight = 4;
 	    }
+
+	    // add clown nose
+	    if (tag == "modify_sprites") {
+		this.currentDialogue.portraitSprite = this.currentDialogue.modifiedPortraitSprite;
+		this.currentDialogue.GetComponent<SpriteRenderer>().sprite = this.currentDialogue.modifiedCharacterSprite;
+	    }
 	}
 	return false;
     }

@@ -208,14 +208,23 @@ public class Player : MonoBehaviour
 	}
     }    
     
-    private void Zipline() {
+    private void Zipline() {	
 	if (this.isZipliningRight) {
 	    this.facingRight = true;
+	    if (Vector3.Distance(this.transform.position, this.rightClimbingNode.transform.position) < 0.2) {
+		// TODO: end of zipline is so dorky
+		this.isZiplining = false;
+		return;
+	    }
 	    this.transform.rotation = Quaternion.FromToRotation(Vector3.down, this.transform.position - this.rightClimbingNode.transform.position);
 	    this.transform.Translate(Vector3.up * this.ZiplineSpeed * this.ziplineSpeedMultiplier * Time.deltaTime);
 
 	} else {
 	    this.facingRight = false;
+	    if (Vector3.Distance(this.transform.position, this.leftClimbingNode.transform.position) < 0.2) {
+		this.isZiplining = false;
+		return;
+	    }
 	    this.transform.rotation = Quaternion.FromToRotation(Vector3.up, this.transform.position - this.leftClimbingNode.transform.position);
 	    this.transform.Translate(Vector3.down * this.ZiplineSpeed * this.ziplineSpeedMultiplier * Time.deltaTime);
 	}
