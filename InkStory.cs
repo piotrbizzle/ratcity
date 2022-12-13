@@ -219,4 +219,10 @@ public class InkStory : MonoBehaviour {
 	    GameObject.Destroy(child.gameObject);
 	}
     }
+
+    public String GetItemDescription(string startingKnot) {
+	this.story.ChoosePathString(startingKnot);
+	this.story.Continue();
+	return this.story.currentText.Trim();
+    }
 }

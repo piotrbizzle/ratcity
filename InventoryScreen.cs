@@ -16,11 +16,13 @@ public class InventoryScreen : MonoBehaviour
     public Image bigInventoryBackgroundPrefab;
     public Image itemImagePrefab;
     public Image cursorPrefab;
+    public Image inventoryDescriptionBackgroundPrefab;
+    public Text inventoryDescriptionTextPrefab;
     
     // related objects
     public Canvas canvas;
     public InventoryItem selectedItem;
-    public Player player;
+    public Player player;    
     
     public void OpenInventory(InventoryItem newItem) {
 	if (newItem != null) {
@@ -40,10 +42,17 @@ public class InventoryScreen : MonoBehaviour
     public void RefreshInventory() {
 	this.ClearView();
 	
-	// dialogue box	
+	// background box	
 	Image background = Instantiate(this.inventoryBackgroundPrefab);
 	background.transform.SetParent(this.canvas.transform, false);
 
+	// description box
+	Image descriptionBackground = Instantiate(this.inventoryDescriptionBackgroundPrefab);
+	descriptionBackground.transform.SetParent(this.canvas.transform, false);
+	Text descriptionText = Instantiate(this.inventoryDescriptionTextPrefab);
+	descriptionText.transform.SetParent(this.canvas.transform, false);
+	descriptionText.text = "";
+	
 	// add items
 	foreach (Transform child in this.transform) {
 	    InventoryItem inventoryItem = child.GetComponent<InventoryItem>();
@@ -57,7 +66,7 @@ public class InventoryScreen : MonoBehaviour
 	    // position and scale
 	    RectTransform itemRect = itemImage.GetComponent<RectTransform>();
 	    itemRect.Rotate(0, 0, 90 * inventoryItem.rotation);	   
-	    itemRect.anchoredPosition = new Vector2(-50 * this.inventoryWidth + inventoryItem.width * 50 + 100 * inventoryItem.x, -50 * this.inventoryHeight + inventoryItem.height * 50 + 100 * inventoryItem.y);
+	    itemRect.anchoredPosition = new Vector2(-50 * this.inventoryWidth + inventoryItem.width * 50 + 100 * inventoryItem.x, -50 * this.inventoryHeight + inventoryItem.height * 50 + 100 * inventoryItem.y + 50);
 
 	    // even i don't understand why this is needed
 	    if (inventoryItem.rotation % 2 == 1) {
@@ -69,6 +78,7 @@ public class InventoryScreen : MonoBehaviour
 	    // colorize for selection and out of bounds
 	    if (inventoryItem.isSelected) {
 		itemImage.color = new Color(1, 1, 1, 0.5f);
+		descriptionText.text = this.player.inkStory.GetItemDescription(inventoryItem.pickUpableStartingKnot);
 	    } else if (inventoryItem.isOutOfBounds) {
 		itemImage.color = new Color(1, 0, 0, 0.5f);
 	    }
@@ -79,7 +89,7 @@ public class InventoryScreen : MonoBehaviour
 	Image cursorImage = Instantiate(this.cursorPrefab);
 	cursorImage.transform.SetParent(this.canvas.transform, false);
 	RectTransform cursorRect = cursorImage.GetComponent<RectTransform>();
-	cursorRect.anchoredPosition = new Vector2(-50 * this.inventoryWidth + 50 + 100 * this.cursorX, -50 * this.inventoryHeight + 50 + 100 * cursorY);
+	cursorRect.anchoredPosition = new Vector2(-50 * this.inventoryWidth + 50 + 100 * this.cursorX, -50 * this.inventoryHeight + 100 + 100 * cursorY);
     }
 
     // returns whether menu should remain open
