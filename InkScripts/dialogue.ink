@@ -1,5 +1,5 @@
 // inventory stuff
-LIST all_items = coin, dollar, rope, explosive, lessonPlan, evidence, clownNose, lens, wire, package, ticket, recorder
+LIST all_items = coin, dollar, rope, explosive, lessonPlan, evidence, clownNose, lens, wire, package, ticket, recorder, files
 VAR player_inventory = ()
 VAR dialogue_inventory = ()
 
@@ -203,6 +203,41 @@ VAR dialogue_inventory = ()
 - Jeez, you won! Okay, the secret knock is five knocks in a row!  # take_dollar
 + Okay
     -> END
+    
+== cop_start ==
+- Cop.
++ Okay
+    -> END
+
+== longJump_start ==
+- Long Jump.
++ Okay
+    -> END
+
+== elevator_start ==
+- Elevator.
++ Okay
+    -> END
+    
+== opponent_start ==
+- Opponent.
++ Okay
+    -> END
+    
+== bouncer_start ==
+- Bouncer.
++ Okay
+    -> END
+    
+== historian_start ==
+- Historian.
++ Okay
+    -> END
+    
+== records_start ==
+- Records.
++ Okay
+    -> END
 
 // environment descriptions
 == tutorial_1 ==
@@ -268,5 +303,10 @@ VAR dialogue_inventory = ()
     
 == recorder_desc ==
 - A portable recording device, depending on your definition of "portable"
++ Okay
+    -> END
+    
+== files_desc ==
+- Some kind of architectural plans.
 + Okay
     -> END
